@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MB Vegetables | Live Fresh Inventory</title>
+    <title>MB Vegetables | Fresh Online Mandi</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -12,7 +12,6 @@
             --bg-main: #090f15;
             --bg-card: rgba(20, 31, 44, 0.75);
             --accent-green: #10b981;
-            --accent-glow: rgba(16, 185, 129, 0.35);
             --accent-bright: #34d399;
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
@@ -20,9 +19,10 @@
             --danger-red: #ef4444;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; user-select: none; }
         body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
+        /* HEADER */
         header {
             position: sticky; top: 0; z-index: 100;
             background: rgba(9, 15, 21, 0.85); backdrop-filter: blur(16px);
@@ -44,8 +44,28 @@
         .hero-banner { padding: 30px 5% 10px; text-align: center; }
         .hero-banner h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; }
 
-        .container { max-width: 1240px; margin: 0 auto; padding: 20px 5% 80px; }
+        /* VEGGIE SPINNER LOADER */
+        .veggie-loader-container {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 40px 0; gap: 14px;
+        }
+        .veggie-spinner {
+            width: 70px; height: 70px; position: relative;
+            animation: spin 2.5s linear infinite;
+        }
+        .veggie-item {
+            position: absolute; font-size: 1.8rem;
+        }
+        .v1 { top: 0; left: 50%; transform: translateX(-50%); }
+        .v2 { bottom: 5px; right: 0; }
+        .v3 { bottom: 5px; left: 0; }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
+        .container { max-width: 1240px; margin: 0 auto; padding: 20px 5% 80px; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
 
         .product-card {
@@ -78,7 +98,7 @@
         .add-btn:hover { background: var(--accent-green); color: #000; }
         .add-btn:disabled { background: rgba(255,255,255,0.05); color: #64748b; border-color: transparent; cursor: not-allowed; }
 
-        /* POLYBAG STAGE ANIMATION */
+        /* POLYBAG ANIMATION MODAL */
         .animation-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(5, 10, 15, 0.85); backdrop-filter: blur(8px); z-index: 900;
@@ -109,12 +129,8 @@
         }
         .shower-particle { position: absolute; width: 40px; height: 40px; object-fit: contain; }
 
-        .polybag-stage.fly-to-cart {
-            animation: flyCart 0.7s forwards;
-        }
-        @keyframes flyCart {
-            100% { transform: scale(0.1) translate(600px, -600px); opacity: 0; }
-        }
+        .polybag-stage.fly-to-cart { animation: flyCart 0.7s forwards; }
+        @keyframes flyCart { 100% { transform: scale(0.1) translate(600px, -600px); opacity: 0; } }
 
         /* CART DRAWER */
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 950; opacity: 0; pointer-events: none; }
@@ -142,7 +158,7 @@
         }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;"> <!-- RIGHT CLICK DISABLE -->
 
     <header>
         <a href="#" class="brand-logo"><i class="fa-solid fa-leaf" style="color: #10b981;"></i> <span>MB Vegetables</span></a>
@@ -153,14 +169,21 @@
     </header>
 
     <section class="hero-banner">
-        <h1>Fresh Vegetables Live Inventory</h1>
-        <p id="loadingStatus" style="color: var(--accent-bright); font-size: 0.9rem;">Fetching live stock from Google Sheet...</p>
+        <h1>Taza Sabjiyan | Seedhe Khet Se</h1>
     </section>
 
     <main class="container">
-        <div class="product-grid" id="productGrid">
-            <!-- Dynamic items from Google Sheet -->
+        <!-- VEGGIE SPINNER LOADER -->
+        <div class="veggie-loader-container" id="veggieLoader">
+            <div class="veggie-spinner">
+                <span class="veggie-item v1">🍅</span>
+                <span class="veggie-item v2">🥔</span>
+                <span class="veggie-item v3">🌶️</span>
+            </div>
+            <p style="color: var(--text-sub); font-weight: 600; font-size: 0.9rem;">Fresh stock updating...</p>
         </div>
+
+        <div class="product-grid" id="productGrid"></div>
     </main>
 
     <!-- POLYBAG ANIMATION MODAL -->
@@ -197,11 +220,23 @@
     </div>
 
     <script>
+        // ================= SECURITY CODES (BLOCK CTRL+U, F12, INSPECT) =================
+        document.onkeydown = function(e) {
+            // Block F12
+            if(e.keyCode == 123) return false;
+            // Block Ctrl+U (View Source)
+            if(e.ctrlKey && e.keyCode == 85) return false;
+            // Block Ctrl+Shift+I (Inspect)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 73) return false;
+            // Block Ctrl+Shift+J (Console)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 74) return false;
+            // Block Ctrl+S (Save Page)
+            if(e.ctrlKey && e.keyCode == 83) return false;
+        };
+
         // ================= CONFIGURATION =================
-        // STEP 1 ME COPIED APPS SCRIPT URL PAR YAHAN PASTE KAREIN:
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygU48VFNNv0rs4SUohRvChpv0AH4LmRumJ4_0EWVsbhzN853octqyP5wY-OzjtjGwa/exec
-"; 
-        const WHATSAPP_NUMBER = "919896873022"; // Aapka WhatsApp number
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygU48VFNNv0rs4SUohRvChpv0AH4LmRumJ4_0EWVsbhzN853octqyP5wY-OzjtjGwa/exec"; 
+        const WHATSAPP_NUMBER = "919896873022";
 
         let products = [];
         let cart = [];
@@ -209,17 +244,16 @@
         window.addEventListener('DOMContentLoaded', fetchInventory);
 
         function fetchInventory() {
-            document.getElementById('loadingStatus').innerText = "Syncing live inventory from Google Sheet...";
             fetch(APPS_SCRIPT_URL)
                 .then(res => res.json())
                 .then(data => {
                     products = data;
+                    document.getElementById('veggieLoader').style.display = 'none'; // Hide spinner
                     renderProducts();
-                    document.getElementById('loadingStatus').innerText = "Live Stock Connected 🟢";
                 })
                 .catch(err => {
-                    document.getElementById('loadingStatus').innerText = "Error loading sheet. Using backup data.";
-                    console.error(err);
+                    document.getElementById('veggieLoader').style.display = 'none';
+                    console.error("Error fetching live stock:", err);
                 });
         }
 
@@ -230,7 +264,7 @@
                 return `
                     <div class="product-card">
                         <div class="stock-badge ${isOutOfStock ? 'out-stock' : 'in-stock'}">
-                            ${isOutOfStock ? 'OUT OF STOCK' : 'IN STOCK (' + p.stock + 'g left)'}
+                            ${isOutOfStock ? 'OUT OF STOCK' : 'IN STOCK'}
                         </div>
                         <div class="product-img-wrapper">
                             <img src="${p.img}" alt="${p.name}" class="product-img">
@@ -267,34 +301,28 @@
             bag.querySelectorAll('.shower-particle').forEach(el => el.remove());
             overlay.classList.add('active');
 
-            // Stage 1: Veggies shower
-            setTimeout(() => {
-                for(let i=0; i<6; i++) {
-                    setTimeout(() => {
-                        const img = document.createElement('img');
-                        img.src = product.img;
-                        img.className = 'shower-particle';
-                        img.style.left = `${20 + Math.random()*140}px`;
-                        img.style.top = '-30px';
-                        bag.appendChild(img);
-                        requestAnimationFrame(() => {
-                            img.style.transition = 'all 0.4s ease-out';
-                            img.style.top = `${180 - Math.random()*70}px`;
-                        });
-                    }, i * 80);
-                }
-            }, 200);
+            for(let i=0; i<6; i++) {
+                setTimeout(() => {
+                    const img = document.createElement('img');
+                    img.src = product.img;
+                    img.className = 'shower-particle';
+                    img.style.left = `${20 + Math.random()*140}px`;
+                    img.style.top = '-30px';
+                    bag.appendChild(img);
+                    requestAnimationFrame(() => {
+                        img.style.transition = 'all 0.4s ease-out';
+                        img.style.top = `${180 - Math.random()*70}px`;
+                    });
+                }, i * 80);
+            }
 
-            // Stage 2: Bag Seal
             setTimeout(() => {
                 sealLine.classList.add('sealed');
                 badge.innerText = "SEALED FRESH!";
             }, 1000);
 
-            // Stage 3: Fly to Cart
             setTimeout(() => stage.classList.add('fly-to-cart'), 1500);
 
-            // Stage 4: Add Cart item
             setTimeout(() => {
                 overlay.classList.remove('active');
                 addToCart(product);
@@ -347,10 +375,8 @@
 
             if (!name || !address) return alert("Naam aur Pata darj karein!");
 
-            // 1. Prepare Google Sheet Stock Deduction Data
-            // Unit me agar 500g hai to per item 500g subtract hoga
             const updateItems = cart.map(item => {
-                let gramWeight = 1000; // default 1kg = 1000g
+                let gramWeight = 1000;
                 if (item.unit.includes('500g')) gramWeight = 500;
                 if (item.unit.includes('250g')) gramWeight = 250;
                 
@@ -360,7 +386,6 @@
                 };
             });
 
-            // 2. Background POST request to Apps Script to update Sheet Stock live
             fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -368,7 +393,6 @@
                 body: JSON.stringify({ items: updateItems })
             });
 
-            // 3. Open WhatsApp with formatted bill
             let msg = `🛒 *NEW ORDER - MB VEGETABLES*\n\n`;
             msg += `👤 *Customer:* ${name}\n`;
             msg += `📍 *Address:* ${address}\n\n`;
