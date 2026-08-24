@@ -3,242 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MB Vegetables | Fresh Online Mandi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>MB Fresh | Farm Fresh Vegetables</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         :root {
-            --bg-main: #090f15;
-            --bg-card: rgba(20, 31, 44, 0.75);
-            --accent-green: #10b981;
-            --accent-bright: #34d399;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --bg-color: #fcfbf9;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --accent-green: #15803d;
+            --accent-green-light: #dcfce7;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.08);
             --danger-red: #ef4444;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; user-select: none; }
-        body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+        body { background-color: var(--bg-color); color: var(--text-dark); min-height: 100vh; line-height: 1.5; }
 
-        /* HEADER */
+        /* TOP ANNOUNCEMENT BAR */
+        .top-bar {
+            background-color: var(--accent-green);
+            color: #ffffff;
+            text-align: center;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* HEADER & POLYBAG CART TRIGGER */
         header {
             position: sticky; top: 0; z-index: 100;
-            background: rgba(9, 15, 21, 0.85); backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 16px 5%; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 6%; display: flex; justify-content: space-between; align-items: center;
         }
 
-        .brand-logo { font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; }
-        .brand-logo span { color: var(--accent-bright); }
+        .brand-logo { font-size: 1.6rem; font-weight: 800; color: var(--accent-green); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .brand-logo span { color: var(--text-dark); }
 
         .cart-trigger-btn {
-            background: linear-gradient(135deg, var(--accent-green), #059669);
-            color: #000; font-weight: 700; padding: 10px 20px; border-radius: 50px;
+            background: var(--text-dark);
+            color: #ffffff; font-weight: 700; padding: 10px 22px; border-radius: 50px;
             cursor: pointer; border: none; display: flex; align-items: center; gap: 10px;
+            transition: all 0.2s ease;
+        }
+        .cart-trigger-btn:hover { background: var(--accent-green); }
+
+        .cart-badge { background: var(--accent-green); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; }
+
+        /* HERO SECTION */
+        .hero {
+            background: linear-gradient(180deg, #f0fdf4 0%, var(--bg-color) 100%);
+            padding: 50px 6% 25px; text-align: center;
+        }
+        .hero-badge {
+            display: inline-block; background: var(--accent-green-light); color: var(--accent-green);
+            padding: 6px 16px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; margin-bottom: 14px;
+        }
+        .hero h1 { font-size: 2.6rem; font-weight: 800; color: var(--text-dark); margin-bottom: 10px; }
+        .hero p { color: var(--text-muted); font-size: 1rem; max-width: 550px; margin: 0 auto; }
+
+        /* 3. HEALTH & NUTRITION BANNER POSTER */
+        .health-banner { max-width: 1240px; margin: 25px auto 35px; padding: 0 6%; }
+        .nutrition-card {
+            background: linear-gradient(135deg, #052e16 0%, #14532d 100%);
+            border-radius: 24px; padding: 28px 32px; color: #ffffff;
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;
+            box-shadow: var(--shadow-md);
+        }
+        .nutrition-info h2 { font-size: 1.7rem; margin-bottom: 8px; color: #4ade80; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .nutrition-info p { max-width: 520px; font-size: 0.95rem; color: #bbf7d0; line-height: 1.6; }
+        .nutrition-badges { display: flex; gap: 12px; flex-wrap: wrap; }
+        .nutri-tag {
+            background: rgba(255,255,255,0.12); backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.2); padding: 10px 16px; border-radius: 30px;
+            font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px;
         }
 
-        .cart-badge { background: #000; color: #fff; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+        /* TRUST BADGES BAR */
+        .trust-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px;
+            max-width: 1240px; margin: 0 auto 35px; padding: 0 6%;
+        }
+        .trust-item {
+            background: #ffffff; padding: 16px 20px; border-radius: 16px; border: 1px solid var(--border-color);
+            display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow-sm);
+        }
+        .trust-icon { font-size: 1.5rem; color: var(--accent-green); }
+        .trust-title { font-weight: 700; font-size: 0.95rem; }
+        .trust-desc { font-size: 0.8rem; color: var(--text-muted); }
 
-        .hero-banner { padding: 30px 5% 10px; text-align: center; }
-        .hero-banner h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; }
-
-        /* VEGGIE SPINNER LOADER */
+        /* LOADER */
         .veggie-loader-container {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 40px 0; gap: 14px;
+            padding: 50px 0; gap: 16px;
         }
         .veggie-spinner {
-            width: 70px; height: 70px; position: relative;
+            width: 60px; height: 60px; position: relative;
             animation: spin 2.5s linear infinite;
         }
-        .veggie-item {
-            position: absolute; font-size: 1.8rem;
-        }
+        .veggie-item { position: absolute; font-size: 1.6rem; }
         .v1 { top: 0; left: 50%; transform: translateX(-50%); }
         .v2 { bottom: 5px; right: 0; }
         .v3 { bottom: 5px; left: 0; }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .container { max-width: 1240px; margin: 0 auto; padding: 20px 5% 80px; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
+        /* MAIN CONTAINER & GRID */
+        .container { max-width: 1240px; margin: 0 auto; padding: 0 6% 80px; }
+        .section-title { font-size: 1.7rem; font-weight: 800; margin-bottom: 22px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 24px; }
 
+        /* PRODUCT CARD DESIGN */
         .product-card {
-            background: var(--bg-card); border: 1px solid var(--glass-border);
-            border-radius: 20px; padding: 20px; text-align: center; position: relative;
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 20px; position: relative;
             display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: var(--shadow-sm); transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+        .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
 
-        .stock-badge {
-            position: absolute; top: 12px; right: 12px;
-            font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+        /* 1. OUT OF STOCK SHADOW EFFECT (NO IN-STOCK BADGE) */
+        .product-img-wrapper {
+            height: 150px; display: flex; align-items: center; justify-content: center;
+            margin-bottom: 14px; background: #fafafa; border-radius: 14px; position: relative; overflow: hidden;
         }
-        .stock-badge.in-stock { background: rgba(16, 185, 129, 0.2); color: var(--accent-bright); border: 1px solid var(--accent-green); }
-        .stock-badge.out-stock { background: rgba(239, 68, 68, 0.2); color: var(--danger-red); border: 1px solid var(--danger-red); }
+        .product-img { max-width: 85%; max-height: 125px; object-fit: contain; transition: filter 0.3s; }
 
-        .product-img-wrapper { height: 140px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
-        .product-img { max-width: 80%; max-height: 120px; object-fit: contain; }
+        .product-card.out-of-stock .product-img-wrapper::after {
+            content: ''; position: absolute; inset: 0;
+            background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(2px);
+        }
+        .product-card.out-of-stock .product-img { filter: grayscale(100%); }
+        .out-stock-label {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2;
+            background: var(--danger-red); color: #fff; font-weight: 800; font-size: 0.75rem;
+            padding: 6px 14px; border-radius: 20px; display: none; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .product-card.out-of-stock .out-stock-label { display: block; }
 
-        .product-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
-        .product-unit { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 12px; }
+        .product-title { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+        .product-unit { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px; font-weight: 500; }
 
-        .product-footer { display: flex; align-items: center; justify-content: space-between; }
-        .product-price { font-size: 1.25rem; font-weight: 800; color: var(--accent-bright); }
+        .product-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid #f1f5f9; }
+        .product-price { font-size: 1.3rem; font-weight: 800; color: var(--text-dark); }
+
+        /* 2. QUANTITY CONTROLLER CONTROLS (+/-) FOR BUDGET */
+        .qty-controls { display: flex; align-items: center; background: #f1f5f9; border-radius: 10px; padding: 3px; }
+        .qty-btn {
+            width: 30px; height: 30px; border: none; background: #ffffff; border-radius: 8px;
+            font-weight: 800; cursor: pointer; color: var(--text-dark); display: flex;
+            align-items: center; justify-content: center; box-shadow: var(--shadow-sm); transition: background 0.2s;
+        }
+        .qty-btn:hover { background: var(--accent-green); color: #fff; }
+        .qty-count { padding: 0 10px; font-weight: 700; font-size: 0.9rem; }
 
         .add-btn {
-            background: rgba(16, 185, 129, 0.15); color: var(--accent-bright);
-            border: 1px solid var(--accent-green); padding: 8px 14px; border-radius: 10px;
-            font-weight: 700; cursor: pointer; transition: all 0.2s;
+            background: var(--accent-green); color: #ffffff; border: none; padding: 9px 18px;
+            border-radius: 10px; font-weight: 700; cursor: pointer; transition: background 0.2s;
         }
-        .add-btn:hover { background: var(--accent-green); color: #000; }
-        .add-btn:disabled { background: rgba(255,255,255,0.05); color: #64748b; border-color: transparent; cursor: not-allowed; }
+        .add-btn:hover { background: #166534; }
+        .add-btn:disabled { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; }
 
-        /* POLYBAG ANIMATION MODAL */
-        .animation-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(5, 10, 15, 0.85); backdrop-filter: blur(8px); z-index: 900;
-            display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s;
-        }
-        .animation-overlay.active { opacity: 1; pointer-events: auto; }
-
-        .polybag-stage {
-            position: relative; width: 300px; height: 400px;
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-            transform: translateY(100px); transition: transform 0.4s;
-        }
-        .animation-overlay.active .polybag-stage { transform: translateY(0); }
-
-        .polybag-container {
-            position: relative; width: 220px; height: 250px;
-            background: rgba(255, 255, 255, 0.12); border: 2px solid rgba(255, 255, 255, 0.4);
-            border-radius: 16px 16px 40px 40px; overflow: hidden; display: flex; align-items: flex-end; justify-content: center;
-        }
-        .polybag-seal-line {
-            position: absolute; top: 12px; width: 100%; height: 6px;
-            background: var(--accent-bright); transform: scaleX(0); transition: transform 0.4s;
-        }
-        .polybag-seal-line.sealed { transform: scaleX(1); }
-        .pack-badge {
-            position: absolute; top: -50px; background: var(--accent-green); color: #000;
-            font-weight: 800; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem;
-        }
-        .shower-particle { position: absolute; width: 40px; height: 40px; object-fit: contain; }
-
-        .polybag-stage.fly-to-cart { animation: flyCart 0.7s forwards; }
-        @keyframes flyCart { 100% { transform: scale(0.1) translate(600px, -600px); opacity: 0; } }
-
-        /* CART DRAWER */
-        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 950; opacity: 0; pointer-events: none; }
+        /* CART SIDEBAR DRAWER */
+        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 950; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .drawer-overlay.active { opacity: 1; pointer-events: auto; }
 
         .cart-drawer {
-            position: fixed; top: 0; right: -420px; width: 100%; max-width: 400px; height: 100vh;
-            background: #0f172a; z-index: 1000; transition: right 0.3s; padding: 24px; display: flex; flex-direction: column;
+            position: fixed; top: 0; right: -420px; width: 100%; max-width: 420px; height: 100vh;
+            background: #ffffff; z-index: 1000; transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 24px; display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1);
         }
         .cart-drawer.active { right: 0; }
-        .drawer-header { display: flex; justify-content: space-between; border-bottom: 1px solid var(--glass-border); padding-bottom: 14px; margin-bottom: 14px; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 16px; }
         .cart-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .cart-item { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; }
-        .cart-item img { width: 40px; height: 40px; object-fit: contain; }
+        .cart-item { display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 12px; border-radius: 14px; border: 1px solid var(--border-color); }
+        .cart-item img { width: 45px; height: 45px; object-fit: contain; }
 
-        .checkout-fields { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+        .checkout-fields { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
         .checkout-fields input, .checkout-fields textarea {
-            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; padding: 10px; color: #fff; outline: none;
+            background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px; padding: 11px; color: var(--text-dark); outline: none; font-size: 0.9rem;
         }
 
         .checkout-whatsapp-btn {
-            width: 100%; background: #25D366; color: #fff; border: none; padding: 14px;
-            border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 12px;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
+            width: 100%; background: #25D366; color: #ffffff; border: none; padding: 15px;
+            border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 14px;
+            display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 1rem;
+            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
         }
     </style>
 </head>
-<body oncontextmenu="return false;"> <!-- RIGHT CLICK DISABLE -->
+<body oncontextmenu="return false;">
+
+    <div class="top-bar">
+        🌱 100% Farm Fresh Vegetables | Eco Safe Polybag Delivery
+    </div>
 
     <header>
-        <a href="#" class="brand-logo"><i class="fa-solid fa-leaf" style="color: #10b981;"></i> <span>MB Vegetables</span></a>
-        <button class="cart-trigger-btn" id="cartTrigger" onclick="toggleCart()">
-            <i class="fa-solid fa-basket-shopping"></i> Cart
+        <a href="#" class="brand-logo"><i class="fa-solid fa-leaf"></i> MB <span>Fresh</span></a>
+        <button class="cart-trigger-btn" onclick="toggleCart()">
+            <i class="fa-solid fa-box-tissue" style="font-size: 1.1rem;"></i> Polybag Cart
             <div class="cart-badge" id="cartCount">0</div>
         </button>
     </header>
 
-    <section class="hero-banner">
-        <h1>Taza Sabjiyan | Seedhe Khet Se</h1>
+    <section class="hero">
+        <div class="hero-badge">DIRECT FROM FARMERS</div>
+        <h1>Fresh Harvest Delivered Daily</h1>
+        <p>No chemicals, no cold storage. Handpicked daily by local farmers and delivered straight to your home.</p>
     </section>
 
+    <!-- 3. HEALTH & NUTRITION BANNER POSTER -->
+    <section class="health-banner">
+        <div class="nutrition-card">
+            <div class="nutrition-info">
+                <h2><i class="fa-solid fa-heart-pulse"></i> Health & Nutrition Guide</h2>
+                <p>ताज़ा हरी सब्जियां विटामिन A, C, आयरन और मिनरल्स का प्राकृतिक स्रोत हैं। यह पाचन को मजबूत बनाती हैं और शरीर की रोग प्रतिरोधक क्षमता (Immunity) बढ़ाती हैं।</p>
+            </div>
+            <div class="nutrition-badges">
+                <div class="nutri-tag"><i class="fa-solid fa-shield-virus" style="color: #4ade80;"></i> High Immunity</div>
+                <div class="nutri-tag"><i class="fa-solid fa-bolt" style="color: #facc15;"></i> 100% Natural</div>
+                <div class="nutri-tag"><i class="fa-solid fa-leaf" style="color: #6ee7b7;"></i> Zero Chemicals</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="trust-grid">
+        <div class="trust-item">
+            <i class="fa-solid fa-truck-fast trust-icon"></i>
+            <div>
+                <div class="trust-title">Express Delivery</div>
+                <div class="trust-desc">Within 2 Hours</div>
+            </div>
+        </div>
+        <div class="trust-item">
+            <i class="fa-solid fa-seedling trust-icon"></i>
+            <div>
+                <div class="trust-title">100% Farm Fresh</div>
+                <div class="trust-desc">Direct From Mandi</div>
+            </div>
+        </div>
+        <div class="trust-item">
+            <i class="fa-solid fa-box-tissue trust-icon"></i>
+            <div>
+                <div class="trust-title">Eco Polybag</div>
+                <div class="trust-desc">Hygienic Packaging</div>
+            </div>
+        </div>
+    </div>
+
     <main class="container">
-        <!-- VEGGIE SPINNER LOADER -->
+        <div class="section-title">Today's Veggie Harvest</div>
+
         <div class="veggie-loader-container" id="veggieLoader">
             <div class="veggie-spinner">
                 <span class="veggie-item v1">🍅</span>
                 <span class="veggie-item v2">🥔</span>
                 <span class="veggie-item v3">🌶️</span>
             </div>
-            <p style="color: var(--text-sub); font-weight: 600; font-size: 0.9rem;">Fresh stock updating...</p>
+            <p style="color: var(--text-muted); font-weight: 600; font-size: 0.9rem;">Connecting Live Inventory...</p>
         </div>
 
         <div class="product-grid" id="productGrid"></div>
     </main>
 
-    <!-- POLYBAG ANIMATION MODAL -->
-    <div class="animation-overlay" id="animOverlay">
-        <div class="polybag-stage" id="polybagStage">
-            <div class="pack-badge" id="packBadge">PACKING...</div>
-            <div class="polybag-container" id="polybagBag">
-                <div class="polybag-seal-line" id="sealLine"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- CART SIDEBAR -->
+    <!-- CART SIDEBAR DRAWER -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleCart()"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="drawer-header">
-            <h3><i class="fa-solid fa-bag-shopping" style="color: var(--accent-green);"></i> Shopping Bag</h3>
-            <button style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer;" onclick="toggleCart()">&times;</button>
+            <h3><i class="fa-solid fa-box-tissue" style="color: var(--accent-green);"></i> Eco Polybag Bag</h3>
+            <button style="background:none; border:none; color:var(--text-dark); font-size:1.5rem; cursor:pointer;" onclick="toggleCart()">&times;</button>
         </div>
+
         <div class="cart-list" id="cartList"></div>
-        <div style="border-top:1px solid var(--glass-border); padding-top:14px; margin-top:14px;">
+
+        <div style="border-top:1px solid var(--border-color); padding-top:14px; margin-top:14px;">
             <div class="checkout-fields">
-                <input type="text" id="custName" placeholder="Aapka Naam">
-                <textarea id="custAddr" rows="2" placeholder="Full Delivery Address"></textarea>
+                <input type="text" id="custName" placeholder="Aapka Full Name">
+                <textarea id="custAddr" rows="2" placeholder="Delivery Address (House No, Street, Landmark)"></textarea>
             </div>
-            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.1rem; margin-top:12px;">
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.15rem; margin-top:14px;">
                 <span>Total Amount:</span>
-                <span id="cartTotal" style="color: var(--accent-bright);">₹0</span>
+                <span id="cartTotal" style="color: var(--accent-green);">₹0</span>
             </div>
             <button class="checkout-whatsapp-btn" onclick="checkoutWhatsApp()">
-                <i class="fa-brands fa-whatsapp" style="font-size:1.2rem;"></i> Order via WhatsApp
+                <i class="fa-brands fa-whatsapp"></i> Confirm Order via WhatsApp
             </button>
         </div>
     </div>
 
     <script>
-        // ================= SECURITY CODES (BLOCK CTRL+U, F12, INSPECT) =================
+        // Disable Inspect Element & Right Click Security
         document.onkeydown = function(e) {
-            // Block F12
-            if(e.keyCode == 123) return false;
-            // Block Ctrl+U (View Source)
-            if(e.ctrlKey && e.keyCode == 85) return false;
-            // Block Ctrl+Shift+I (Inspect)
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 73) return false;
-            // Block Ctrl+Shift+J (Console)
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 74) return false;
-            // Block Ctrl+S (Save Page)
-            if(e.ctrlKey && e.keyCode == 83) return false;
-        };
+            if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 85) || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74))) return false;};
 
-        // ================= CONFIGURATION =================
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygU48VFNNv0rs4SUohRvChpv0AH4LmRumJ4_0EWVsbhzN853octqyP5wY-OzjtjGwa/exec"; 
-        const WHATSAPP_NUMBER = "919896873022";
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygU48VFNNv0rs4SUohRvChpv0AH4LmRumJ4_0EWVsbhzN853octqyP5wY-OzjtjGwa/exec
+"; 
+        const WHATSAPP_NUMBER = "9896873022";
 
-        let products = [];
+        // Backup Data (Fallback if Google Sheet takes time)
+        let products = [
+            { id: '1', name: 'Fresh Tomato (टमाटर)', unit: '1 kg', price: 40, stock: 20000, img: 'https://cdn-icons-png.flaticon.com/512/1202/1202125.png' },
+            { id: '2', name: 'Fresh Potato (आलू)', unit: '1 kg', price: 30, stock: 30000, img: 'https://cdn-icons-png.flaticon.com/512/1135/1135544.png' },
+            { id: '3', name: 'Green Chilli (हरी मिर्च)', unit: '250 g', price: 20, stock: 0, img: 'https://cdn-icons-png.flaticon.com/512/3983/3983584.png' },
+            { id: '4', name: 'Fresh Onion (प्याज)', unit: '1 kg', price: 35, stock: 25000, img: 'https://cdn-icons-png.flaticon.com/512/1135/1135535.png' }
+        ];
+
         let cart = [];
 
         window.addEventListener('DOMContentLoaded', fetchInventory);
@@ -247,26 +322,28 @@
             fetch(APPS_SCRIPT_URL)
                 .then(res => res.json())
                 .then(data => {
-                    products = data;
-                    document.getElementById('veggieLoader').style.display = 'none'; // Hide spinner
+                    if(data && data.length > 0) products = data;
+                    document.getElementById('veggieLoader').style.display = 'none';
                     renderProducts();
                 })
                 .catch(err => {
                     document.getElementById('veggieLoader').style.display = 'none';
-                    console.error("Error fetching live stock:", err);
+                    renderProducts(); // Fallback to initial data
                 });
         }
 
+        // 1. RENDER PRODUCTS (OUT OF STOCK SHADOW + NO IN-STOCK BADGE)
         function renderProducts() {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = products.map(p => {
                 const isOutOfStock = p.stock <= 0;
+                const cartItem = cart.find(item => item.id === p.id);
+                const qty = cartItem ? cartItem.qty : 0;
+
                 return `
-                    <div class="product-card">
-                        <div class="stock-badge ${isOutOfStock ? 'out-stock' : 'in-stock'}">
-                            ${isOutOfStock ? 'OUT OF STOCK' : 'IN STOCK'}
-                        </div>
+                    <div class="product-card ${isOutOfStock ? 'out-of-stock' : ''}">
                         <div class="product-img-wrapper">
+                            <span class="out-stock-label">Out of Stock</span>
                             <img src="${p.img}" alt="${p.name}" class="product-img">
                         </div>
                         <div>
@@ -275,67 +352,38 @@
                         </div>
                         <div class="product-footer">
                             <div class="product-price">₹${p.price}</div>
-                            <button class="add-btn" ${isOutOfStock ? 'disabled' : ''} onclick="triggerPacking('${p.id}')">
-                                ${isOutOfStock ? 'Unavailable' : '+ Add'}
-                            </button>
+                            ${isOutOfStock 
+                                ? `<button class="add-btn" disabled>Unavailable</button>`
+                                : qty > 0 
+                                    ? `<div class="qty-controls">
+                                        <button class="qty-btn" onclick="updateQty('${p.id}', -1)">-</button>
+                                        <span class="qty-count">${qty}</span>
+                                        <button class="qty-btn" onclick="updateQty('${p.id}', 1)">+</button>
+                                       </div>`
+                                    : `<button class="add-btn" onclick="updateQty('${p.id}', 1)">+ Add</button>`
+                            }
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        function triggerPacking(productId) {
+        // 2. BUDGET CONTROLLER (+/- LOGIC)
+        function updateQty(productId, change) {
             const product = products.find(p => p.id === productId);
             if (!product || product.stock <= 0) return;
 
-            const overlay = document.getElementById('animOverlay');
-            const stage = document.getElementById('polybagStage');
-            const bag = document.getElementById('polybagBag');
-            const badge = document.getElementById('packBadge');
-            const sealLine = document.getElementById('sealLine');
-
-            stage.className = 'polybag-stage';
-            sealLine.classList.remove('sealed');
-            badge.innerText = `PACKING ${product.name.toUpperCase()}...`;
-            
-            bag.querySelectorAll('.shower-particle').forEach(el => el.remove());
-            overlay.classList.add('active');
-
-            for(let i=0; i<6; i++) {
-                setTimeout(() => {
-                    const img = document.createElement('img');
-                    img.src = product.img;
-                    img.className = 'shower-particle';
-                    img.style.left = `${20 + Math.random()*140}px`;
-                    img.style.top = '-30px';
-                    bag.appendChild(img);
-                    requestAnimationFrame(() => {
-                        img.style.transition = 'all 0.4s ease-out';
-                        img.style.top = `${180 - Math.random()*70}px`;
-                    });
-                }, i * 80);
-            }
-
-            setTimeout(() => {
-                sealLine.classList.add('sealed');
-                badge.innerText = "SEALED FRESH!";
-            }, 1000);
-
-            setTimeout(() => stage.classList.add('fly-to-cart'), 1500);
-
-            setTimeout(() => {
-                overlay.classList.remove('active');
-                addToCart(product);
-            }, 2100);
-        }
-
-        function addToCart(product) {
-            const existing = cart.find(i => i.id === product.id);
-            if (existing) {
-                existing.qty += 1;
-            } else {
+            let cartItem = cart.find(item => item.id === productId);
+            if (cartItem) {
+                cartItem.qty += change;
+                if (cartItem.qty <= 0) {
+                    cart = cart.filter(item => item.id !== productId);
+                }
+            } else if (change > 0) {
                 cart.push({ ...product, qty: 1 });
             }
+
+            renderProducts();
             updateCartUI();
         }
 
@@ -354,10 +402,14 @@
                 <div class="cart-item">
                     <img src="${item.img}">
                     <div style="flex-grow:1;">
-                        <div style="font-weight:700;">${item.name}</div>
-                        <div style="font-size:0.85rem; color:var(--accent-bright);">₹${item.price} x ${item.qty}</div>
+                        <div style="font-weight:700; color:var(--text-dark);">${item.name}</div>
+                        <div style="font-size:0.85rem; color:var(--accent-green); font-weight:700;">₹${item.price} x ${item.qty}</div>
                     </div>
-                    <div>₹${item.price * item.qty}</div>
+                    <div class="qty-controls">
+                        <button class="qty-btn" onclick="updateQty('${item.id}', -1)">-</button>
+                        <span class="qty-count">${item.qty}</span>
+                        <button class="qty-btn" onclick="updateQty('${item.id}', 1)">+</button>
+                    </div>
                 </div>
             `).join('');
         }
@@ -369,21 +421,17 @@
 
         function checkoutWhatsApp() {
             if (cart.length === 0) return alert("Cart khaali hai!");
-
             const name = document.getElementById('custName').value.trim();
             const address = document.getElementById('custAddr').value.trim();
 
-            if (!name || !address) return alert("Naam aur Pata darj karein!");
+            if (!name || !address) return alert("Kripya Naam aur Pata darj karein!");
 
+            // Google Sheets Stock Deduction Payload
             const updateItems = cart.map(item => {
                 let gramWeight = 1000;
                 if (item.unit.includes('500g')) gramWeight = 500;
                 if (item.unit.includes('250g')) gramWeight = 250;
-                
-                return {
-                    id: item.id,
-                    qtyInGrams: gramWeight * item.qty
-                };
+                return { id: item.id, qtyInGrams: gramWeight * item.qty };
             });
 
             fetch(APPS_SCRIPT_URL, {
@@ -393,10 +441,10 @@
                 body: JSON.stringify({ items: updateItems })
             });
 
-            let msg = `🛒 *NEW ORDER - MB VEGETABLES*\n\n`;
+            let msg = `🛒 *NEW ORDER - MB FRESH*\n\n`;
             msg += `👤 *Customer:* ${name}\n`;
             msg += `📍 *Address:* ${address}\n\n`;
-            msg += `📦 *ITEMS:*\n`;
+            msg += `📦 *ITEMS (Eco Polybag):*\n`;
 
             let grandTotal = 0;
             cart.forEach((item, index) => {
@@ -405,8 +453,7 @@
                 msg += `${index + 1}. ${item.name} (${item.unit}) x ${item.qty} = ₹${total}\n`;
             });
 
-            msg += `\n💰 *TOTAL:* ₹${grandTotal}`;
-            
+            msg += `\n💰 *TOTAL AMOUNT:* ₹${grandTotal}`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
     </script>
