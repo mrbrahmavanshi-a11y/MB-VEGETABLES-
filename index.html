@@ -3,403 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MB Vegetables - Freshness Delivered</title>
+    <title>MB Vegetables | Live Fresh Inventory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --accent-green: #22c55e;
-            --accent-glow: rgba(34, 197, 94, 0.4);
-            --text-light: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg-main: #090f15;
+            --bg-card: rgba(20, 31, 44, 0.75);
+            --accent-green: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.35);
+            --accent-bright: #34d399;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --danger-red: #ef4444;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            min-height: 100vh;
-            padding-bottom: 60px;
-            overflow-x: hidden;
-        }
-
-        /* Header */
         header {
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(9, 15, 21, 0.85); backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 5%; display: flex; justify-content: space-between; align-items: center;
         }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--accent-green);
-            text-shadow: 0 0 10px var(--accent-glow);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .brand-logo { font-size: 1.5rem; font-weight: 800; color: #fff; text-decoration: none; }
+        .brand-logo span { color: var(--accent-bright); }
+
+        .cart-trigger-btn {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: #000; font-weight: 700; padding: 10px 20px; border-radius: 50px;
+            cursor: pointer; border: none; display: flex; align-items: center; gap: 10px;
         }
 
-        /* Cart Floating Button */
-        .cart-trigger {
-            position: relative;
-            background: var(--accent-green);
-            color: #000;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 0 15px var(--accent-glow);
-            transition: transform 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .cart-badge { background: #000; color: #fff; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
 
-        .cart-trigger:hover {
-            transform: scale(1.05);
-        }
+        .hero-banner { padding: 30px 5% 10px; text-align: center; }
+        .hero-banner h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; }
 
-        .cart-count {
-            background: #000;
-            color: #fff;
-            border-radius: 50%;
-            padding: 2px 8px;
-            font-size: 0.8rem;
-        }
+        .container { max-width: 1240px; margin: 0 auto; padding: 20px 5% 80px; }
 
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 40px 20px;
-            background: radial-gradient(circle at center, rgba(34, 197, 94, 0.15) 0%, transparent 70%);
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .hero p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-
-        /* Product Grid */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 25px;
-            padding: 20px 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
 
         .product-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            backdrop-filter: blur(5px);
-            transition: border 0.3s, transform 0.3s;
-            position: relative;
+            background: var(--bg-card); border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 20px; text-align: center; position: relative;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
 
-        .product-card:hover {
-            border-color: var(--accent-green);
-            transform: translateY(-5px);
+        .stock-badge {
+            position: absolute; top: 12px; right: 12px;
+            font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;
         }
+        .stock-badge.in-stock { background: rgba(16, 185, 129, 0.2); color: var(--accent-bright); border: 1px solid var(--accent-green); }
+        .stock-badge.out-stock { background: rgba(239, 68, 68, 0.2); color: var(--danger-red); border: 1px solid var(--danger-red); }
 
-        .product-card img {
-            width: 140px;
-            height: 140px;
-            object-fit: contain;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
-        }
+        .product-img-wrapper { height: 140px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+        .product-img { max-width: 80%; max-height: 120px; object-fit: contain; }
 
-        .product-title {
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-        }
+        .product-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+        .product-unit { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 12px; }
 
-        .product-price {
-            color: var(--accent-green);
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
+        .product-footer { display: flex; align-items: center; justify-content: space-between; }
+        .product-price { font-size: 1.25rem; font-weight: 800; color: var(--accent-bright); }
 
         .add-btn {
-            background: rgba(34, 197, 94, 0.2);
-            color: var(--accent-green);
-            border: 1px solid var(--accent-green);
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            width: 100%;
-            transition: all 0.2s;
+            background: rgba(16, 185, 129, 0.15); color: var(--accent-bright);
+            border: 1px solid var(--accent-green); padding: 8px 14px; border-radius: 10px;
+            font-weight: 700; cursor: pointer; transition: all 0.2s;
+        }
+        .add-btn:hover { background: var(--accent-green); color: #000; }
+        .add-btn:disabled { background: rgba(255,255,255,0.05); color: #64748b; border-color: transparent; cursor: not-allowed; }
+
+        /* POLYBAG STAGE ANIMATION */
+        .animation-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(5, 10, 15, 0.85); backdrop-filter: blur(8px); z-index: 900;
+            display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .animation-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .polybag-stage {
+            position: relative; width: 300px; height: 400px;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+            transform: translateY(100px); transition: transform 0.4s;
+        }
+        .animation-overlay.active .polybag-stage { transform: translateY(0); }
+
+        .polybag-container {
+            position: relative; width: 220px; height: 250px;
+            background: rgba(255, 255, 255, 0.12); border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 16px 16px 40px 40px; overflow: hidden; display: flex; align-items: flex-end; justify-content: center;
+        }
+        .polybag-seal-line {
+            position: absolute; top: 12px; width: 100%; height: 6px;
+            background: var(--accent-bright); transform: scaleX(0); transition: transform 0.4s;
+        }
+        .polybag-seal-line.sealed { transform: scaleX(1); }
+        .pack-badge {
+            position: absolute; top: -50px; background: var(--accent-green); color: #000;
+            font-weight: 800; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem;
+        }
+        .shower-particle { position: absolute; width: 40px; height: 40px; object-fit: contain; }
+
+        .polybag-stage.fly-to-cart {
+            animation: flyCart 0.7s forwards;
+        }
+        @keyframes flyCart {
+            100% { transform: scale(0.1) translate(600px, -600px); opacity: 0; }
         }
 
-        .add-btn:hover {
-            background: var(--accent-green);
-            color: #000;
+        /* CART DRAWER */
+        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 950; opacity: 0; pointer-events: none; }
+        .drawer-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .cart-drawer {
+            position: fixed; top: 0; right: -420px; width: 100%; max-width: 400px; height: 100vh;
+            background: #0f172a; z-index: 1000; transition: right 0.3s; padding: 24px; display: flex; flex-direction: column;
+        }
+        .cart-drawer.active { right: 0; }
+        .drawer-header { display: flex; justify-content: space-between; border-bottom: 1px solid var(--glass-border); padding-bottom: 14px; margin-bottom: 14px; }
+        .cart-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .cart-item { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; }
+        .cart-item img { width: 40px; height: 40px; object-fit: contain; }
+
+        .checkout-fields { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+        .checkout-fields input, .checkout-fields textarea {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; padding: 10px; color: #fff; outline: none;
         }
 
-        /* Falling Animation Image Element */
-        .animating-veg {
-            position: fixed;
-            z-index: 1000;
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-            pointer-events: none;
-            transition: all 0.8s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+        .checkout-whatsapp-btn {
+            width: 100%; background: #25D366; color: #fff; border: none; padding: 14px;
+            border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 12px;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
         }
-
-        /* Cart Modal Drawer */
-        .cart-modal {
-            position: fixed;
-            top: 0;
-            right: -400px;
-            width: 100%;
-            max-width: 380px;
-            height: 100%;
-            background: #1e293b;
-            box-shadow: -5px 0 25px rgba(0,0,0,0.5);
-            z-index: 200;
-            transition: right 0.3s ease;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .cart-modal.active {
-            right: 0;
-        }
-
-        .cart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-        }
-
-        .close-cart {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .cart-items {
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            background: rgba(255,255,255,0.05);
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        .checkout-btn {
-            background: #25D366; /* WhatsApp Green */
-            color: #fff;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Overlay */
-        .overlay {
-            position: fixed;
-            top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            z-index: 150;
-        }
-
-        .overlay.active { display: block; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">🥬 MB Vegetables</div>
-        <div class="cart-trigger" id="cartBtn" onclick="toggleCart()">
-            🛒 Cart <span class="cart-count" id="cartCount">0</span>
-        </div>
+        <a href="#" class="brand-logo"><i class="fa-solid fa-leaf" style="color: #10b981;"></i> <span>MB Vegetables</span></a>
+        <button class="cart-trigger-btn" id="cartTrigger" onclick="toggleCart()">
+            <i class="fa-solid fa-basket-shopping"></i> Cart
+            <div class="cart-badge" id="cartCount">0</div>
+        </button>
     </header>
 
-    <section class="hero">
-        <h1>Fresh Organic Vegetables</h1>
-        <p>Direct from farm to your kitchen with instant WhatsApp Order</p>
+    <section class="hero-banner">
+        <h1>Fresh Vegetables Live Inventory</h1>
+        <p id="loadingStatus" style="color: var(--accent-bright); font-size: 0.9rem;">Fetching live stock from Google Sheet...</p>
     </section>
 
-    <main class="products-grid">
-        <!-- Hari Mirch (Green Chilli) -->
-        <div class="product-card">
-            <img src="https://images.unsplash.com/photo-1588879460618-9249e7d947d1?w=300&auto=format&fit=crop&q=80" alt="Green Chilli" id="img-chilli">
-            <h3 class="product-title">Hari Mirch (Green Chilli)</h3>
-            <div class="product-price">₹40 / 250g</div>
-            <button class="add-btn" onclick="addToCart('Hari Mirch', 40, 'img-chilli')">+ Add to Cart</button>
-        </div>
-
-        <!-- Tamatar (Tomato) -->
-        <div class="product-card">
-            <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=300&auto=format&fit=crop&q=80" alt="Tomato" id="img-tomato">
-            <h3 class="product-title">Desi Tamatar (Tomato)</h3>
-            <div class="product-price">₹30 / 1kg</div>
-            <button class="add-btn" onclick="addToCart('Desi Tamatar', 30, 'img-tomato')">+ Add to Cart</button>
-        </div>
-
-        <!-- Aloo (Potato) -->
-        <div class="product-card">
-            <img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=300&auto=format&fit=crop&q=80" alt="Potato" id="img-potato">
-            <h3 class="product-title">Fresh Aloo (Potato)</h3>
-            <div class="product-price">₹25 / 1kg</div>
-            <button class="add-btn" onclick="addToCart('Fresh Aloo', 25, 'img-potato')">+ Add to Cart</button>
-        </div>
-
-        <!-- Bhindi (Lady Finger) -->
-        <div class="product-card">
-            <img src="https://images.unsplash.com/photo-1625944525533-473f1a3d54e7?w=300&auto=format&fit=crop&q=80" alt="Lady Finger" id="img-bhindi">
-            <h3 class="product-title">Bhindi (Lady Finger)</h3>
-            <div class="product-price">₹50 / 500g</div>
-            <button class="add-btn" onclick="addToCart('Bhindi', 50, 'img-bhindi')">+ Add to Cart</button>
+    <main class="container">
+        <div class="product-grid" id="productGrid">
+            <!-- Dynamic items from Google Sheet -->
         </div>
     </main>
 
-    <!-- Cart Sidebar Modal -->
-    <div class="overlay" id="overlay" onclick="toggleCart()"></div>
-    <div class="cart-modal" id="cartModal">
-        <div class="cart-header">
-            <h3>Your Shopping Cart</h3>
-            <button class="close-cart" onclick="toggleCart()">&times;</button>
-        </div>
-        <div class="cart-items" id="cartItems">
-            <p style="color: var(--text-muted); text-align: center; margin-top: 20px;">Cart is empty!</p>
-        </div>
-        <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-            <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px;">
-                <span>Total Amount:</span>
-                <span id="cartTotal">₹0</span>
+    <!-- POLYBAG ANIMATION MODAL -->
+    <div class="animation-overlay" id="animOverlay">
+        <div class="polybag-stage" id="polybagStage">
+            <div class="pack-badge" id="packBadge">PACKING...</div>
+            <div class="polybag-container" id="polybagBag">
+                <div class="polybag-seal-line" id="sealLine"></div>
             </div>
-            <button class="checkout-btn" onclick="checkoutWhatsApp()">
-                Order via WhatsApp 📲
+        </div>
+    </div>
+
+    <!-- CART SIDEBAR -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleCart()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="drawer-header">
+            <h3><i class="fa-solid fa-bag-shopping" style="color: var(--accent-green);"></i> Shopping Bag</h3>
+            <button style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer;" onclick="toggleCart()">&times;</button>
+        </div>
+        <div class="cart-list" id="cartList"></div>
+        <div style="border-top:1px solid var(--glass-border); padding-top:14px; margin-top:14px;">
+            <div class="checkout-fields">
+                <input type="text" id="custName" placeholder="Aapka Naam">
+                <textarea id="custAddr" rows="2" placeholder="Full Delivery Address"></textarea>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.1rem; margin-top:12px;">
+                <span>Total Amount:</span>
+                <span id="cartTotal" style="color: var(--accent-bright);">₹0</span>
+            </div>
+            <button class="checkout-whatsapp-btn" onclick="checkoutWhatsApp()">
+                <i class="fa-brands fa-whatsapp" style="font-size:1.2rem;"></i> Order via WhatsApp
             </button>
         </div>
     </div>
 
     <script>
-        // Set your WhatsApp Number here (With Country Code, e.g., 919876543210)
-        const WHATSAPP_NUMBER = "919876543210"; 
+        // ================= CONFIGURATION =================
+        // STEP 1 ME COPIED APPS SCRIPT URL PAR YAHAN PASTE KAREIN:
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygU48VFNNv0rs4SUohRvChpv0AH4LmRumJ4_0EWVsbhzN853octqyP5wY-OzjtjGwa/exec
+"; 
+        const WHATSAPP_NUMBER = "919896873022"; // Aapka WhatsApp number
 
+        let products = [];
         let cart = [];
 
-        function addToCart(name, price, imgId) {
-            // 1. Add item to data array
-            const existingItem = cart.find(item => item.name === name);
-            if(existingItem) {
-                existingItem.qty += 1;
-            } else {
-                cart.push({ name, price, qty: 1 });
-            }
+        window.addEventListener('DOMContentLoaded', fetchInventory);
 
-            // 2. Trigger Drop/Fall Animation
-            animateToCart(imgId);
-
-            // 3. Update Cart UI after small delay
-            setTimeout(() => {
-                updateCartUI();
-            }, 800);
+        function fetchInventory() {
+            document.getElementById('loadingStatus').innerText = "Syncing live inventory from Google Sheet...";
+            fetch(APPS_SCRIPT_URL)
+                .then(res => res.json())
+                .then(data => {
+                    products = data;
+                    renderProducts();
+                    document.getElementById('loadingStatus').innerText = "Live Stock Connected 🟢";
+                })
+                .catch(err => {
+                    document.getElementById('loadingStatus').innerText = "Error loading sheet. Using backup data.";
+                    console.error(err);
+                });
         }
 
-        function animateToCart(imgId) {
-            const originalImg = document.getElementById(imgId);
-            const cartBtn = document.getElementById('cartBtn');
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = products.map(p => {
+                const isOutOfStock = p.stock <= 0;
+                return `
+                    <div class="product-card">
+                        <div class="stock-badge ${isOutOfStock ? 'out-stock' : 'in-stock'}">
+                            ${isOutOfStock ? 'OUT OF STOCK' : 'IN STOCK (' + p.stock + 'g left)'}
+                        </div>
+                        <div class="product-img-wrapper">
+                            <img src="${p.img}" alt="${p.name}" class="product-img">
+                        </div>
+                        <div>
+                            <div class="product-title">${p.name}</div>
+                            <div class="product-unit">${p.unit}</div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">₹${p.price}</div>
+                            <button class="add-btn" ${isOutOfStock ? 'disabled' : ''} onclick="triggerPacking('${p.id}')">
+                                ${isOutOfStock ? 'Unavailable' : '+ Add'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
 
-            const imgRect = originalImg.getBoundingClientRect();
-            const cartRect = cartBtn.getBoundingClientRect();
+        function triggerPacking(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product || product.stock <= 0) return;
 
-            // Create temporary flying clone element
-            const clone = originalImg.cloneNode();
-            clone.classList.add('animating-veg');
-            document.body.appendChild(clone);
+            const overlay = document.getElementById('animOverlay');
+            const stage = document.getElementById('polybagStage');
+            const bag = document.getElementById('polybagBag');
+            const badge = document.getElementById('packBadge');
+            const sealLine = document.getElementById('sealLine');
 
-            // Start position
-            clone.style.left = `${imgRect.left}px`;
-            clone.style.top = `${imgRect.top}px`;
+            stage.className = 'polybag-stage';
+            sealLine.classList.remove('sealed');
+            badge.innerText = `PACKING ${product.name.toUpperCase()}...`;
+            
+            bag.querySelectorAll('.shower-particle').forEach(el => el.remove());
+            overlay.classList.add('active');
 
-            // Trigger animation in next frame
-            requestAnimationFrame(() => {
-                clone.style.left = `${cartRect.left + 20}px`;
-                clone.style.top = `${cartRect.top + 10}px`;
-                clone.style.transform = 'scale(0.1) rotate(360deg)';
-                clone.style.opacity = '0.5';
-            });
-
-            // Clean up after animation finishes
+            // Stage 1: Veggies shower
             setTimeout(() => {
-                clone.remove();
-                cartBtn.style.transform = 'scale(1.2)';
-                setTimeout(() => cartBtn.style.transform = 'scale(1)', 200);
-            }, 800);
+                for(let i=0; i<6; i++) {
+                    setTimeout(() => {
+                        const img = document.createElement('img');
+                        img.src = product.img;
+                        img.className = 'shower-particle';
+                        img.style.left = `${20 + Math.random()*140}px`;
+                        img.style.top = '-30px';
+                        bag.appendChild(img);
+                        requestAnimationFrame(() => {
+                            img.style.transition = 'all 0.4s ease-out';
+                            img.style.top = `${180 - Math.random()*70}px`;
+                        });
+                    }, i * 80);
+                }
+            }, 200);
+
+            // Stage 2: Bag Seal
+            setTimeout(() => {
+                sealLine.classList.add('sealed');
+                badge.innerText = "SEALED FRESH!";
+            }, 1000);
+
+            // Stage 3: Fly to Cart
+            setTimeout(() => stage.classList.add('fly-to-cart'), 1500);
+
+            // Stage 4: Add Cart item
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                addToCart(product);
+            }, 2100);
+        }
+
+        function addToCart(product) {
+            const existing = cart.find(i => i.id === product.id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            updateCartUI();
         }
 
         function updateCartUI() {
-            const cartCountEl = document.getElementById('cartCount');
-            const cartItemsEl = document.getElementById('cartItems');
-            const cartTotalEl = document.getElementById('cartTotal');
+            const countEl = document.getElementById('cartCount');
+            const listEl = document.getElementById('cartList');
+            const totalEl = document.getElementById('cartTotal');
 
-            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
-            cartCountEl.innerText = totalItems;
-            cartTotalEl.innerText = `₹${totalPrice}`;
+            countEl.innerText = totalQty;
+            totalEl.innerText = `₹${totalPrice}`;
 
-            if(cart.length === 0) {
-                cartItemsEl.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin-top: 20px;">Cart is empty!</p>';
-                return;
-            }
-
-            cartItemsEl.innerHTML = cart.map(item => `
+            listEl.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <div>
-                        <div><strong>${item.name}</strong></div>
-                        <small style="color: var(--accent-green);">₹${item.price} x ${item.qty}</small>
+                    <img src="${item.img}">
+                    <div style="flex-grow:1;">
+                        <div style="font-weight:700;">${item.name}</div>
+                        <div style="font-size:0.85rem; color:var(--accent-bright);">₹${item.price} x ${item.qty}</div>
                     </div>
                     <div>₹${item.price * item.qty}</div>
                 </div>
@@ -407,30 +335,55 @@
         }
 
         function toggleCart() {
-            document.getElementById('cartModal').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
+            document.getElementById('cartDrawer').classList.toggle('active');
+            document.getElementById('drawerOverlay').classList.toggle('active');
         }
 
         function checkoutWhatsApp() {
-            if(cart.length === 0) {
-                alert("Aapka cart khaali hai!");
-                return;
-            }
+            if (cart.length === 0) return alert("Cart khaali hai!");
 
-            let message = "Hello MB Vegetables, Mujhe ye sabjiyan order karni hain:\n\n";
-            let total = 0;
+            const name = document.getElementById('custName').value.trim();
+            const address = document.getElementById('custAddr').value.trim();
 
-            cart.forEach(item => {
-                const subtotal = item.price * item.qty;
-                total += subtotal;
-                message += `• ${item.name} (${item.qty}) - ₹${subtotal}\n`;
+            if (!name || !address) return alert("Naam aur Pata darj karein!");
+
+            // 1. Prepare Google Sheet Stock Deduction Data
+            // Unit me agar 500g hai to per item 500g subtract hoga
+            const updateItems = cart.map(item => {
+                let gramWeight = 1000; // default 1kg = 1000g
+                if (item.unit.includes('500g')) gramWeight = 500;
+                if (item.unit.includes('250g')) gramWeight = 250;
+                
+                return {
+                    id: item.id,
+                    qtyInGrams: gramWeight * item.qty
+                };
             });
 
-            message += `\n*Total Amount:* ₹${total}`;
-            message += `\n\nKripya order confirm karein aur delivery timing batayein.`;
+            // 2. Background POST request to Apps Script to update Sheet Stock live
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: updateItems })
+            });
 
-            const encodedMessage = encodeURIComponent(message);
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
+            // 3. Open WhatsApp with formatted bill
+            let msg = `🛒 *NEW ORDER - MB VEGETABLES*\n\n`;
+            msg += `👤 *Customer:* ${name}\n`;
+            msg += `📍 *Address:* ${address}\n\n`;
+            msg += `📦 *ITEMS:*\n`;
+
+            let grandTotal = 0;
+            cart.forEach((item, index) => {
+                const total = item.price * item.qty;
+                grandTotal += total;
+                msg += `${index + 1}. ${item.name} (${item.unit}) x ${item.qty} = ₹${total}\n`;
+            });
+
+            msg += `\n💰 *TOTAL:* ₹${grandTotal}`;
+            
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
     </script>
 </body>
