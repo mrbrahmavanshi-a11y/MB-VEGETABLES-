@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MB Fresh | Complete Realistic 3D Market</title>
+    <title>MB Fresh | Premium 3D Interactive Market</title>
     
     <style>
         :root {
@@ -96,7 +96,7 @@
         }
 
         .product-img {
-            max-width: 95%; max-height: 150px; object-fit: contain;
+            max-width: 90%; max-height: 140px; object-fit: contain;
             transform: translateZ(50px); 
             filter: drop-shadow(0px 18px 12px rgba(0, 0, 0, 0.75));
             transition: transform 0.3s ease;
@@ -153,7 +153,7 @@
             0% { transform: translateY(0px) rotateY(-5deg); }
             100% { transform: translateY(-12px) rotateY(5deg); }
         }
-        .preview-img { width: 220px; height: 220px; object-fit: contain; filter: drop-shadow(0 25px 20px rgba(0,0,0,0.8)); margin-bottom: 20px; }
+        .preview-img { width: 180px; height: 180px; object-fit: contain; filter: drop-shadow(0 25px 20px rgba(0,0,0,0.8)); margin: 0 auto 20px; display: block; }
         .preview-title { font-size: 1.8rem; font-weight: 900; color: #fff; margin-bottom: 6px; }
         .preview-price { font-size: 1.6rem; color: var(--gold-accent); font-weight: 900; margin-bottom: 20px; }
 
@@ -185,7 +185,7 @@
         .bag-logo-mark { position: absolute; bottom: 25px; color: rgba(255,255,255,0.25); font-size: 0.8rem; font-weight: 900; letter-spacing: 2px; }
 
         .anim-item-img {
-            width: 100px; height: 100px; object-fit: contain; position: absolute; top: -120px;
+            width: 90px; height: 90px; object-fit: contain; position: absolute; top: -120px;
             filter: drop-shadow(0 15px 10px rgba(0,0,0,0.7)); opacity: 0;
             transition: all 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045); z-index: 4;
         }
@@ -235,7 +235,7 @@
 
     <section class="hero">
         <h1>Realistic Interactive Harvest</h1>
-        <p>Click any product to inspect in 3D spotlight or add directly to trigger polybag packing.</p>
+        <p>Click any product card to preview in 3D spotlight or press "+ Add" to trigger the Polybag animation.</p>
     </section>
 
     <main class="container">
@@ -249,4 +249,333 @@
             <div id="prevTitle" class="preview-title"></div>
             <div id="prevUnit" style="color:#a89481; margin-bottom:10px;"></div>
             <div id="prevPrice" class="preview-price"></div>
-            <button id="prevAddBtn" class="add-btn" style="width:100%; padding:14px; font-size:1.1rem;">
+            <button id="prevAddBtn" class="add-btn" style="width:100%; padding:14px; font-size:1.1rem;">+ Add To Kraft Polybag</button>
+        </div>
+    </div>
+
+    <div class="cinematic-stage" id="cinematicStage">
+        <canvas id="particleCanvas"></canvas>
+        <div class="packaging-box" id="packagingBox">
+            <div class="polybag-body">
+                <div class="bag-seal-flap" id="bagFlap"></div>
+                <img id="animVegImg" class="anim-item-img" src="" alt="Vegetable">
+                <div class="bag-logo-mark">MB ORGANIC</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
+        <div class="cart-popup">
+            <div class="popup-header">
+                <h3 style="color:var(--gold-accent);">🛍️ Sealed Polybag Cart</h3>
+                <button class="popup-close-btn" onclick="toggleCartPopup()">&times;</button>
+            </div>
+            <div class="cart-list" id="cartList"></div>
+            <div style="margin-top:14px; border-top: 1px solid var(--border-wood); padding-top: 14px;">
+                <div class="checkout-fields">
+                    <input type="text" id="custName" placeholder="Full Name">
+                    <textarea id="custAddr" rows="2" placeholder="Full Delivery Address"></textarea>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-weight:900; font-size: 1.2rem; margin-top: 12px;">
+                    <span>Grand Total:</span>
+                    <span id="cartTotal" style="color: var(--gold-accent);">₹0</span>
+                </div>
+                <button class="checkout-whatsapp-btn" onclick="checkoutWhatsApp()">💬 Confirm Order via WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const WHATSAPP_NUMBER = "919896873022";
+
+        // EMBEDDED HIGH-QUALITY CLEAN SVG DATA-URIs (100% Guaranteed Offline/Online Display)
+        const products = [
+            { 
+                id: '1', 
+                name: 'Fresh Red Tomatoes (टमाटर)', 
+                unit: '1 kg', 
+                price: 40, 
+                stock: 20000, 
+                img: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="55" r="38" fill="%23e53935"/><path d="M50 12 C45 22 35 25 25 20 C35 30 45 28 50 32 C55 28 65 30 75 20 C65 25 55 22 50 12Z" fill="%2343a047"/><path d="M48 5 L52 5 L52 18 L48 18 Z" fill="%232e7d32"/></svg>` 
+            },
+            { 
+                id: '2', 
+                name: 'Fresh Farm Potatoes (आलू)', 
+                unit: '1 kg', 
+                price: 30, 
+                stock: 30000, 
+                img: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><ellipse cx="50" cy="52" rx="42" ry="32" fill="%238d6e63"/><circle cx="35" cy="45" r="2.5" fill="%235d4037"/><circle cx="65" cy="60" r="3" fill="%235d4037"/><circle cx="50" cy="65" r="2" fill="%235d4037"/></svg>` 
+            },
+            { 
+                id: '3', 
+                name: 'Spicy Green Chillies (हरी मिर्च)', 
+                unit: '250 g', 
+                price: 20, 
+                stock: 15000, 
+                img: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20 25 Q 40 10 75 75 Q 60 85 45 60 Q 25 35 20 25 Z" fill="%2343a047"/><path d="M15 15 C 20 20 22 22 25 25 C 20 28 18 22 15 15 Z" fill="%231b5e20"/></svg>` 
+            },
+            { 
+                id: '4', 
+                name: 'Fresh Red Onions (प्याज)', 
+                unit: '1 kg', 
+                price: 35, 
+                stock: 25000, 
+                img: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="55" r="35" fill="%23ab47bc"/><path d="M50 20 Q 42 35 50 90 Q 58 35 50 20 Z" fill="%238e24aa"/><path d="M50 10 L50 20" stroke="%2343a047" stroke-width="4"/></svg>` 
+            },
+            { 
+                id: '5', 
+                name: 'Organic Cauliflower (फूलगोभी)', 
+                unit: '1 pc', 
+                price: 45, 
+                stock: 10000, 
+                img: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="45" r="28" fill="%23f5f5f5"/><path d="M15 65 Q 35 40 50 75 Q 65 40 85 65 Q 50 95 15 65 Z" fill="%234caf50"/></svg>` 
+            },
+            { 
+                id: '6', 
+                name: 'Crunchy Carrots (गाजर)', 
+                unit: '500 g', 
+                price: 30, 
+                stock: 18000, 
+                img: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="35,25 65,25 50,90" fill="%23fb8c00"/><path d="M50 5 L40 25 M50 5 L50 25 M50 5 L60 25" stroke="%232e7d32" stroke-width="4"/></svg>` 
+            }
+        ];
+
+        let cart = [];
+
+        renderProducts();
+
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = products.map(p => {
+                const isOutOfStock = p.stock <= 0;
+                const cartItem = cart.find(item => item.id === p.id);
+                const qty = cartItem ? cartItem.qty : 0;
+
+                return `
+                    <div class="product-card ${isOutOfStock ? 'out-of-stock' : ''}" 
+                         onclick="open3DPreview('${p.id}')"
+                         onmousemove="handle3DTilt(event, this)" 
+                         onmouseleave="reset3DTilt(this)">
+                        <div class="product-img-wrapper">
+                            <span class="out-stock-label">Out of Stock</span>
+                            <img src="${p.img}" alt="${p.name}" class="product-img">
+                        </div>
+                        <div>
+                            <div class="product-title">${p.name}</div>
+                            <div class="product-unit">${p.unit}</div>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">₹${p.price}</div>
+                            ${isOutOfStock 
+                                ? `<button class="add-btn" style="background:#444;" disabled>Unavailable</button>`
+                                : qty > 0 
+                                    ? `<div class="qty-controls" onclick="event.stopPropagation()">
+                                        <button class="qty-btn" onclick="updateQty('${p.id}', -1, event)">-</button>
+                                        <span class="qty-count">${qty}</span>
+                                        <button class="qty-btn" onclick="updateQty('${p.id}', 1, event)">+</button>
+                                       </div>`
+                                    : `<button class="add-btn" onclick="startCinematicPacking('${p.id}', event)">+ Add</button>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /* 3D SPOTLIGHT PREVIEW LOGIC */
+        function open3DPreview(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('prevImg').src = product.img;
+            document.getElementById('prevTitle').innerText = product.name;
+            document.getElementById('prevUnit').innerText = product.unit;
+            document.getElementById('prevPrice').innerText = `₹${product.price}`;
+            
+            const addBtn = document.getElementById('prevAddBtn');
+            addBtn.onclick = (e) => {
+                closePreview();
+                startCinematicPacking(product.id, e);
+            };
+
+            document.getElementById('previewOverlay').classList.add('active');
+        }
+
+        function closePreview() { document.getElementById('previewOverlay').classList.remove('active'); }
+        function closePreviewOnOverlay(e) { if (e.target.id === 'previewOverlay') closePreview(); }
+
+        /* 3D TILT EFFECT */
+        function handle3DTilt(e, card) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left, y = e.clientY - rect.top;
+            const centerX = rect.width / 2, centerY = rect.height / 2;
+            card.style.transform = `rotateX(${((y - centerY) / centerY) * -16}deg) rotateY(${((x - centerX) / centerX) * 16}deg)`;
+        }
+        function reset3DTilt(card) { card.style.transform = `rotateX(0deg) rotateY(0deg)`; }
+
+        /* CINEMATIC 3D PACKAGING ANIMATION */
+        function startCinematicPacking(productId, event) {
+            if(event) event.stopPropagation();
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const stage = document.getElementById('cinematicStage');
+            const box = document.getElementById('packagingBox');
+            const flap = document.getElementById('bagFlap');
+            const img = document.getElementById('animVegImg');
+            const cartBtn = document.getElementById('cartBtn');
+
+            img.src = product.img;
+            img.classList.remove('drop-in');
+            flap.classList.remove('sealed');
+            box.className = 'packaging-box';
+            box.style.transform = 'scale(0.8) translateY(50px)';
+            stage.classList.add('active');
+
+            // 1. Drop into Bag
+            setTimeout(() => {
+                box.style.transform = 'scale(1) translateY(0)';
+                img.classList.add('drop-in');
+            }, 100);
+
+            // 2. Seal Ziplock & Particles
+            setTimeout(() => {
+                flap.classList.add('sealed');
+                triggerSealingParticles();
+            }, 650);
+
+            // 3. Fly & Disappear to Cart
+            setTimeout(() => {
+                const cartRect = cartBtn.getBoundingClientRect();
+                const boxRect = box.getBoundingClientRect();
+                
+                const targetX = (cartRect.left + cartRect.width/2) - (boxRect.left + boxRect.width/2);
+                const targetY = (cartRect.top + cartRect.height/2) - (boxRect.top + boxRect.height/2);
+
+                box.style.setProperty('--target-x', `${targetX}px`);
+                box.style.setProperty('--target-y', `${targetY}px`);
+                box.classList.add('fly-to-cart');
+            }, 1100);
+
+            // 4. Update Cart State
+            setTimeout(() => {
+                stage.classList.remove('active');
+                updateQty(productId, 1, null);
+                cartBtn.classList.add('bounce');
+                setTimeout(() => cartBtn.classList.remove('bounce'), 400);
+            }, 1750);
+        }
+
+        /* PARTICLE EFFECT */
+        function triggerSealingParticles() {
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const centerX = window.innerWidth / 2;
+            const centerY = (window.innerHeight / 2) - 80;
+
+            for (let i = 0; i < 35; i++) {
+                particles.push({
+                    x: centerX + (Math.random() - 0.5) * 120,
+                    y: centerY,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 1) * 3 - 1,
+                    size: Math.random() * 5 + 2,
+                    color: Math.random() > 0.4 ? '#dfa837' : '#ffffff',
+                    alpha: 1
+                });
+            }
+
+            function renderParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let active = false;
+                particles.forEach(p => {
+                    if (p.alpha > 0) {
+                        active = true;
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.alpha -= 0.03;
+                        ctx.globalAlpha = Math.max(0, p.alpha);
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+                if (active) requestAnimationFrame(renderParticles);
+            }
+            renderParticles();
+        }
+
+        /* CART MANAGEMENT */
+        function updateQty(productId, change, event) {
+            if(event) event.stopPropagation();
+            const product = products.find(p => p.id === productId);
+            if (!product || product.stock <= 0) return;
+
+            let cartItem = cart.find(item => item.id === productId);
+            if (cartItem) {
+                cartItem.qty += change;
+                if (cartItem.qty <= 0) cart = cart.filter(item => item.id !== productId);
+            } else if (change > 0) {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            renderProducts();
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            document.getElementById('cartCount').innerText = totalQty;
+            document.getElementById('cartTotal').innerText = `₹${totalPrice}`;
+
+            const listEl = document.getElementById('cartList');
+            if(cart.length === 0) {
+                listEl.innerHTML = `<div style="text-align:center; color:#a89481; padding:30px 0;">Your kraft polybag is empty 🛒</div>`;
+                return;
+            }
+
+            listEl.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.img}" class="cart-item-img">
+                    <div style="flex-grow:1;">
+                        <div style="font-weight:700; font-size:0.95rem;">${item.name}</div>
+                        <div style="font-size:0.85rem; color:var(--gold-accent); font-weight:700;">₹${item.price} x ${item.qty}</div>
+                    </div>
+                    <div class="qty-controls">
+                        <button class="qty-btn" onclick="updateQty('${item.id}', -1, event)">-</button>
+                        <span class="qty-count">${item.qty}</span>
+                        <button class="qty-btn" onclick="updateQty('${item.id}', 1, event)">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleCartPopup() { document.getElementById('modalOverlay').classList.toggle('active'); }
+        function closeOnOverlay(e) { if (e.target.id === 'modalOverlay') toggleCartPopup(); }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) return alert("Cart is empty!");
+            const name = document.getElementById('custName').value.trim();
+            const address = document.getElementById('custAddr').value.trim();
+            if (!name || !address) return alert("Please fill Name & Address!");
+
+            let msg = `🛒 *NEW ORDER - MB REALISTIC MARKET*\n\n👤 *Customer:* ${name}\n📍 *Address:* ${address}\n\n📦 *ITEMS:*\n`;
+            let grandTotal = 0;
+            cart.forEach((item, i) => {
+                const total = item.price * item.qty;
+                grandTotal += total;
+                msg += `${i + 1}. ${item.name} (${item.unit}) x ${item.qty} = ₹${total}\n`;
+            });
+            msg += `\n💰 *TOTAL AMOUNT:* ₹${grandTotal}`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
