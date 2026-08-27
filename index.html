@@ -3,41 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MB Fresh store | Farm Fresh Vegetables</title>
+    <title>MB Fresh Store | 3D Interactive Farm Fresh</title>
     
     <style>
         :root {
-            --bg-color: #fcfbf9;
+            --bg-color: #f4f7f4;
             --text-dark: #1e293b;
             --text-muted: #64748b;
             --accent-green: #15803d;
             --accent-green-light: #dcfce7;
-            --card-bg: #ffffff;
-            --border-color: #e2e8f0;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --border-color: rgba(226, 232, 240, 0.8);
             --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.05);
-            --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.08);
+            --shadow-md: 0 20px 30px -10px rgba(0, 0, 0, 0.15);
             --danger-red: #ef4444;
+            
+            /* Dynamic 3D Controls Variables */
+            --card-tilt-x: 0deg;
+            --card-tilt-y: 0deg;
+            --card-depth: 40px;
+            --card-perspective: 1000px;
+            --card-blur: 12px;
+            --card-radius: 20px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; user-select: none; }
-        body { background-color: var(--bg-color); color: var(--text-dark); min-height: 100vh; line-height: 1.5; }
+        body { background-color: var(--bg-color); color: var(--text-dark); min-height: 100vh; line-height: 1.5; overflow-x: hidden; }
 
         /* TOP ANNOUNCEMENT BAR */
         .top-bar {
             background-color: var(--accent-green);
-            color: #ffffff;
-            text-align: center;
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 0.3px;
+            color: #ffffff; text-align: center; padding: 8px 16px;
+            font-size: 0.85rem; font-weight: 600; letter-spacing: 0.3px;
         }
 
-        /* HEADER & POLYBAG CART TRIGGER */
+        /* HEADER */
         header {
             position: sticky; top: 0; z-index: 100;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
             padding: 16px 6%; display: flex; justify-content: space-between; align-items: center;
         }
@@ -45,99 +49,112 @@
         .brand-logo { font-size: 1.6rem; font-weight: 800; color: var(--accent-green); text-decoration: none; display: flex; align-items: center; gap: 8px; }
         .brand-logo span { color: var(--text-dark); }
 
-        .cart-trigger-btn {
-            background: var(--text-dark);
-            color: #ffffff; font-weight: 700; padding: 10px 22px; border-radius: 50px;
-            cursor: pointer; border: none; display: flex; align-items: center; gap: 10px;
-            transition: all 0.2s ease;
-        }
-        .cart-trigger-btn:hover { background: var(--accent-green); }
+        .header-actions { display: flex; gap: 12px; align-items: center; }
 
-        .cart-badge { background: var(--accent-green); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; }
+        .btn-edit-toggle {
+            background: #0f172a; color: #fff; border: none; padding: 10px 18px;
+            border-radius: 50px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;
+        }
+
+        .cart-trigger-btn {
+            background: var(--accent-green); color: #ffffff; font-weight: 700; padding: 10px 22px;
+            border-radius: 50px; cursor: pointer; border: none; display: flex; align-items: center; gap: 10px;
+            transition: all 0.2s ease; box-shadow: 0 4px 14px rgba(21, 128, 61, 0.3);
+        }
+
+        .cart-badge { background: #ffffff; color: var(--accent-green); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; }
 
         /* HERO SECTION */
-        .hero {
-            background: linear-gradient(180deg, #f0fdf4 0%, var(--bg-color) 100%);
-            padding: 40px 6% 20px; text-align: center;
-        }
-        .hero-badge {
-            display: inline-block; background: var(--accent-green-light); color: var(--accent-green);
-            padding: 6px 16px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; margin-bottom: 14px;
-        }
-        .hero h1 { font-size: 2.4rem; font-weight: 800; color: var(--text-dark); margin-bottom: 10px; }
-        .hero p { color: var(--text-muted); font-size: 1rem; max-width: 550px; margin: 0 auto; }
+        .hero { background: linear-gradient(180deg, #e7f5ec 0%, var(--bg-color) 100%); padding: 35px 6% 15px; text-align: center; }
+        .hero-badge { display: inline-block; background: var(--accent-green-light); color: var(--accent-green); padding: 6px 16px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; margin-bottom: 12px; }
+        .hero h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 8px; }
+        .hero p { color: var(--text-muted); font-size: 0.95rem; max-width: 550px; margin: 0 auto; }
 
-        /* HEALTH & NUTRITION BANNER POSTER */
-        .health-banner { max-width: 1240px; margin: 25px auto 30px; padding: 0 6%; }
-        .nutrition-card {
-            background: linear-gradient(135deg, #052e16 0%, #14532d 100%);
-            border-radius: 24px; padding: 28px 32px; color: #ffffff;
-            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;
-            box-shadow: var(--shadow-md);
+        /* MAIN LAYOUT WITH EDIT PANEL */
+        .main-wrapper { display: flex; max-width: 1300px; margin: 20px auto 60px; padding: 0 4%; gap: 24px; position: relative; }
+        .container { flex-grow: 1; }
+
+        /* 3D LIVE EDIT CONTROLS PANEL */
+        .edit-panel {
+            width: 300px; background: #ffffff; border-radius: 20px; padding: 20px;
+            border: 1px solid var(--border-color); box-shadow: var(--shadow-md);
+            height: fit-content; position: sticky; top: 90px; z-index: 10;
         }
-        .nutrition-info h2 { font-size: 1.6rem; margin-bottom: 8px; color: #4ade80; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .nutrition-info p { max-width: 520px; font-size: 0.95rem; color: #bbf7d0; line-height: 1.6; }
-        .nutrition-badges { display: flex; gap: 12px; flex-wrap: wrap; }
-        .nutri-tag {
-            background: rgba(255,255,255,0.12); backdrop-filter: blur(6px);
-            border: 1px solid rgba(255,255,255,0.2); padding: 10px 16px; border-radius: 30px;
-            font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px;
+        .edit-panel h3 { font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: var(--text-dark); }
+        .control-group { margin-bottom: 16px; }
+        .control-group label { font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 6px; color: var(--text-muted); }
+        .control-group input[type="range"] { width: 100%; accent-color: var(--accent-green); cursor: pointer; }
+
+        /* 3D PRODUCT GRID & CARD STYLES */
+        .product-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px;
+            perspective: var(--card-perspective);
         }
 
-        /* TRUST BADGES BAR */
-        .trust-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px;
-            max-width: 1240px; margin: 0 auto 35px; padding: 0 6%;
-        }
-        .trust-item {
-            background: #ffffff; padding: 16px 20px; border-radius: 16px; border: 1px solid var(--border-color);
-            display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow-sm);
-        }
-        .trust-icon { font-size: 1.5rem; }
-        .trust-title { font-weight: 700; font-size: 0.95rem; }
-        .trust-desc { font-size: 0.8rem; color: var(--text-muted); }
-
-        /* MAIN CONTAINER & GRID */
-        .container { max-width: 1240px; margin: 0 auto; padding: 0 6% 80px; }
-        .section-title { font-size: 1.7rem; font-weight: 800; margin-bottom: 22px; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 22px; }
-
-        /* PRODUCT CARD DESIGN */
         .product-card {
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 20px; padding: 20px; position: relative;
+            background: var(--card-bg);
+            backdrop-filter: blur(var(--card-blur));
+            border: 1px solid var(--border-color);
+            border-radius: var(--card-radius);
+            padding: 20px; position: relative;
             display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: var(--shadow-sm); transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: var(--shadow-md);
+            transform-style: preserve-3d;
+            transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s;
+            cursor: pointer;
         }
-        .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
 
-        /* OUT OF STOCK SHADOW EFFECT */
+        .product-card:hover {
+            box-shadow: 0 25px 35px -10px rgba(0, 0, 0, 0.2);
+        }
+
         .product-img-wrapper {
             height: 140px; display: flex; align-items: center; justify-content: center;
-            margin-bottom: 14px; background: #fafafa; border-radius: 14px; position: relative; overflow: hidden;
+            margin-bottom: 14px; background: rgba(255, 255, 255, 0.6);
+            border-radius: 14px; position: relative;
+            transform-style: preserve-3d;
         }
-        .product-img { max-width: 85%; max-height: 115px; object-fit: contain; }
 
-        .product-card.out-of-stock .product-img-wrapper::after {
-            content: ''; position: absolute; inset: 0;
-            background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(2px);
+        .product-img {
+            max-width: 85%; max-height: 115px; object-fit: contain;
+            transform: translateZ(var(--card-depth));
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 15px 10px rgba(0,0,0,0.15));
         }
-        .product-card.out-of-stock .product-img { filter: grayscale(100%); }
+
+        .product-card:hover .product-img {
+            transform: translateZ(calc(var(--card-depth) + 20px)) scale(1.08);
+        }
+
+        .product-title {
+            font-size: 1.05rem; font-weight: 700; color: var(--text-dark);
+            transform: translateZ(calc(var(--card-depth) * 0.5));
+        }
+
+        .product-unit { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px; font-weight: 500; }
+
+        .product-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.06);
+            transform: translateZ(calc(var(--card-depth) * 0.4));
+        }
+        
+        .product-price { font-size: 1.25rem; font-weight: 800; color: var(--text-dark); }
+
+        /* OUT OF STOCK STYLING */
+        .product-card.out-of-stock { opacity: 0.75; }
+        .product-card.out-of-stock .product-img-wrapper::after {
+            content: ''; position: absolute; inset: 0; background: rgba(15, 23, 42, 0.5); border-radius: 14px;
+        }
         .out-stock-label {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) translateZ(60px); z-index: 5;
             background: var(--danger-red); color: #fff; font-weight: 800; font-size: 0.75rem;
-            padding: 6px 14px; border-radius: 20px; display: none; text-transform: uppercase; letter-spacing: 0.5px;
+            padding: 6px 14px; border-radius: 20px; display: none; text-transform: uppercase;
         }
         .product-card.out-of-stock .out-stock-label { display: block; }
 
-        .product-title { font-size: 1.05rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
-        .product-unit { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px; font-weight: 500; }
-
-        .product-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid #f1f5f9; }
-        .product-price { font-size: 1.25rem; font-weight: 800; color: var(--text-dark); }
-
-        /* QUANTITY CONTROLLER CONTROLS (+/-) */
-        .qty-controls { display: flex; align-items: center; background: #f1f5f9; border-radius: 10px; padding: 3px; }
+        /* QUANTITY CONTROLS */
+        .qty-controls { display: flex; align-items: center; background: #e2e8f0; border-radius: 10px; padding: 3px; }
         .qty-btn {
             width: 28px; height: 28px; border: none; background: #ffffff; border-radius: 8px;
             font-weight: 800; cursor: pointer; color: var(--text-dark); display: flex;
@@ -153,148 +170,133 @@
         .add-btn:hover { background: #166534; }
         .add-btn:disabled { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; }
 
+        /* 3D POLYBAG PACKING ANIMATION OVERLAY */
+        .polybag-anim-overlay {
+            position: fixed; inset: 0; pointer-events: none; z-index: 9999; display: flex;
+            align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
+        }
+        .polybag-anim-overlay.active { opacity: 1; }
+        .polybag-container {
+            width: 140px; height: 160px; background: rgba(255,255,255,0.4); border: 2px dashed var(--accent-green);
+            border-radius: 10px 10px 30px 30px; position: relative; display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(4px); transform: scale(0.5) translateY(100px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .polybag-anim-overlay.active .polybag-container { transform: scale(1) translateY(0); }
+        .falling-veg { width: 50px; position: absolute; top: -60px; animation: dropIn 0.5s ease-in forwards; }
+
+        @keyframes dropIn {
+            0% { top: -60px; opacity: 0; transform: scale(1.2); }
+            100% { top: 40px; opacity: 1; transform: scale(0.8); }
+        }
+
         /* POPUP MODAL STYLING */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(6px);
             z-index: 999; display: none; align-items: center; justify-content: center; padding: 16px;
         }
         .modal-overlay.active { display: flex; }
-
         .cart-popup {
             background: #ffffff; width: 100%; max-width: 450px; border-radius: 20px;
-            padding: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            animation: popupAnim 0.2s cubic-bezier(0.16, 1, 0.3, 1); max-height: 90vh; display: flex; flex-direction: column;
+            padding: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); max-height: 90vh; display: flex; flex-direction: column;
         }
-
-        @keyframes popupAnim {
-            from { transform: scale(0.92); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
         .popup-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 14px; }
-        .popup-close-btn { background: #f1f5f9; border: none; font-size: 1.3rem; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; font-weight: bold; color: var(--text-dark); }
-        .popup-close-btn:hover { background: #e2e8f0; }
-        
-        .cart-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; max-height: 240px; padding-right: 4px; }
+        .popup-close-btn { background: #f1f5f9; border: none; font-size: 1.3rem; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; font-weight: bold; }
+        .cart-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; max-height: 240px; }
         .cart-item { display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border-color); }
         .cart-item-img { width: 40px; height: 40px; object-fit: contain; }
-
         .checkout-fields { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
-        .checkout-fields input, .checkout-fields textarea {
-            width: 100%; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; outline: none; font-size: 0.9rem;
-        }
-        .checkout-fields input:focus, .checkout-fields textarea:focus { border-color: var(--accent-green); }
-        
+        .checkout-fields input, .checkout-fields textarea { width: 100%; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; outline: none; font-size: 0.9rem; }
         .checkout-whatsapp-btn {
             width: 100%; background: #25D366; color: #fff; border: none; padding: 14px;
-            border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1rem; margin-top: 8px;
+            border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1rem; margin-top: 10px;
             display: flex; align-items: center; justify-content: center; gap: 8px;
-            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
         }
-        .checkout-whatsapp-btn:hover { background: #20ba5a; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-    <div class="top-bar">
-        🌱 100% Farm Fresh Vegetables | Eco Safe Polybag Delivery
-    </div>
+    <div class="top-bar">🌱 100% Farm Fresh Vegetables | Eco Safe Polybag Delivery</div>
 
     <header>
         <a href="#" class="brand-logo">🍃 MB <span>Fresh</span></a>
-        <button class="cart-trigger-btn" onclick="toggleCartPopup()">
-            🛍️ Polybag Cart
-            <div class="cart-badge" id="cartCount">0</div>
-        </button>
+        <div class="header-actions">
+            <button class="btn-edit-toggle" onclick="toggleEditPanel()">🎨 3D Controls</button>
+            <button class="cart-trigger-btn" onclick="toggleCartPopup()">
+                🛍️ Polybag Cart
+                <div class="cart-badge" id="cartCount">0</div>
+            </button>
+        </div>
     </header>
 
     <section class="hero">
         <div class="hero-badge">MRATYUNJAY BRAHMAVANSHI</div>
         <h1>Fresh Harvest Delivered Daily</h1>
-        <p>No chemicals, no cold storage. Handpicked daily by local farmers and delivered straight to your home.</p>
+        <p>3D Interactive Storefront - Premium Quality & Direct Mandi Sourcing</p>
     </section>
 
-    <!-- HEALTH & NUTRITION BANNER POSTER -->
-    <section class="health-banner">
-        <div class="nutrition-card">
-            <div class="nutrition-info">
-                <h2>❤️ Health & Nutrition Guide</h2>
-                <p>ताज़ा हरी सब्जियां विटामिन A, C, आयरन और मिनरल्स का प्राकृतिक स्रोत हैं। यह पाचन को मजबूत बनाती हैं और शरीर की रोग प्रतिरोधक क्षमता (Immunity) बढ़ाती हैं।</p>
+    <div class="main-wrapper">
+        
+        <aside class="edit-panel" id="editPanel">
+            <h3>🎛️ 3D Real-Time Editor</h3>
+            
+            <div class="control-group">
+                <label>3D Depth Elevate (Z-Axis): <span id="valDepth">40px</span></label>
+                <input type="range" min="10" max="80" value="40" oninput="update3DParam('--card-depth', this.value + 'px', 'valDepth')">
             </div>
-            <div class="nutrition-badges">
-                <div class="nutri-tag">🛡️ High Immunity</div>
-                <div class="nutri-tag">⚡ 100% Natural</div>
-                <div class="nutri-tag">🌿 Zero Chemicals</div>
-            </div>
-        </div>
-    </section>
 
-    <!-- TRUST BADGES BAR -->
-    <div class="trust-grid">
-        <div class="trust-item">
-            <span class="trust-icon">🚀</span>
-            <div>
-                <div class="trust-title">Express Delivery</div>
-                <div class="trust-desc">Within 2 Hours</div>
+            <div class="control-group">
+                <label>3D Perspective: <span id="valPersp">1000px</span></label>
+                <input type="range" min="400" max="2000" value="1000" step="50" oninput="update3DParam('--card-perspective', this.value + 'px', 'valPersp')">
             </div>
-        </div>
-        <div class="trust-item">
-            <span class="trust-icon">🌱</span>
-            <div>
-                <div class="trust-title">100% Farm Fresh</div>
-                <div class="trust-desc">Direct From Mandi</div>
+
+            <div class="control-group">
+                <label>Glass Blur Effect: <span id="valBlur">12px</span></label>
+                <input type="range" min="0" max="30" value="12" oninput="update3DParam('--card-blur', this.value + 'px', 'valBlur')">
             </div>
-        </div>
-        <div class="trust-item">
-            <span class="trust-icon">📦</span>
-            <div>
-                <div class="trust-title">Eco Polybag</div>
-                <div class="trust-desc">Hygienic Packaging</div>
+
+            <div class="control-group">
+                <label>Card Border Radius: <span id="valRadius">20px</span></label>
+                <input type="range" min="0" max="40" value="20" oninput="update3DParam('--card-radius', this.value + 'px', 'valRadius')">
             </div>
+        </aside>
+
+        <main class="container">
+            <div class="product-grid" id="productGrid"></div>
+        </main>
+    </div>
+
+    <div class="polybag-anim-overlay" id="polybagOverlay">
+        <div class="polybag-container">
+            <img id="animVegImg" class="falling-veg" src="" alt="Veg">
+            <span style="position: absolute; bottom: 8px; font-size: 0.75rem; font-weight:800; color:var(--accent-green);">PACKING...</span>
         </div>
     </div>
 
-    <main class="container">
-        <div class="section-title">Today's Veggie Harvest</div>
-        <div class="product-grid" id="productGrid"></div>
-    </main>
-
-    <!-- POPUP CART MODAL -->
     <div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
         <div class="cart-popup">
             <div class="popup-header">
                 <h3>🛍️ Eco Polybag Cart</h3>
                 <button class="popup-close-btn" onclick="toggleCartPopup()">&times;</button>
             </div>
-
             <div class="cart-list" id="cartList"></div>
-
             <div style="margin-top:12px; border-top: 1px solid var(--border-color); padding-top: 12px;">
                 <div class="checkout-fields">
                     <input type="text" id="custName" placeholder="Aapka Full Name">
-                    <textarea id="custAddr" rows="2" placeholder="Delivery Address (House No, Street, Landmark)"></textarea>
+                    <textarea id="custAddr" rows="2" placeholder="Delivery Address"></textarea>
                 </div>
                 <div style="display:flex; justify-content:space-between; font-weight:800; font-size: 1.1rem; margin-top: 10px;">
                     <span>Total Amount:</span>
                     <span id="cartTotal" style="color: var(--accent-green);">₹0</span>
                 </div>
-                <button class="checkout-whatsapp-btn" onclick="checkoutWhatsApp()">
-                    💬 Order on WhatsApp
-                </button>
+                <button class="checkout-whatsapp-btn" onclick="checkoutWhatsApp()">💬 Order on WhatsApp</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Disable Inspect Element Key Shortcuts
-        document.onkeydown = function(e) {
-            if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 85) || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74))) return false;
-        };
-
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZzv98fFFJduX0Lz6xSxkrhk23v7MrT473M2H5VdnoImUZ3nwbTA8ZCuGa54EVsFQ/exec"; 
         const WHATSAPP_NUMBER = "919896873022";
 
-        // Fast Load Initial Data
         let products = [
             { id: '1', name: 'Fresh Tomato (टमाटर)', unit: '1 kg', price: 40, stock: 20000, img: 'https://cdn-icons-png.flaticon.com/512/1202/1202125.png' },
             { id: '2', name: 'Fresh Potato (आलू)', unit: '1 kg', price: 30, stock: 30000, img: 'https://cdn-icons-png.flaticon.com/512/1135/1135544.png' },
@@ -304,23 +306,20 @@
 
         let cart = [];
 
-        // Instant Page Render (No Delay)
         renderProducts();
 
-        // Non-blocking Live Inventory Sync from Google Sheets
-        if (APPS_SCRIPT_URL && APPS_SCRIPT_URL.startsWith("http")) {
-            fetch(APPS_SCRIPT_URL)
-                .then(res => res.json())
-                .then(data => {
-                    if (data && data.length > 0) {
-                        products = data;
-                        renderProducts();
-                    }
-                })
-                .catch(() => {});
+        // 3D Tilt Dynamic Control
+        function update3DParam(property, value, displayId) {
+            document.documentElement.style.setProperty(property, value);
+            document.getElementById(displayId).innerText = value;
         }
 
-        // RENDER PRODUCTS GRID
+        function toggleEditPanel() {
+            const panel = document.getElementById('editPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Render Products Grid & Attach 3D Mouse Event Listeners
         function renderProducts() {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = products.map(p => {
@@ -329,7 +328,7 @@
                 const qty = cartItem ? cartItem.qty : 0;
 
                 return `
-                    <div class="product-card ${isOutOfStock ? 'out-of-stock' : ''}">
+                    <div class="product-card ${isOutOfStock ? 'out-of-stock' : ''}" onmousemove="handle3DTilt(event, this)" onmouseleave="reset3DTilt(this)">
                         <div class="product-img-wrapper">
                             <span class="out-stock-label">Out of Stock</span>
                             <img src="${p.img}" alt="${p.name}" loading="lazy" class="product-img">
@@ -344,11 +343,11 @@
                                 ? `<button class="add-btn" disabled>Unavailable</button>`
                                 : qty > 0 
                                     ? `<div class="qty-controls">
-                                        <button class="qty-btn" onclick="updateQty('${p.id}', -1)">-</button>
+                                        <button class="qty-btn" onclick="updateQty('${p.id}', -1, event)">-</button>
                                         <span class="qty-count">${qty}</span>
-                                        <button class="qty-btn" onclick="updateQty('${p.id}', 1)">+</button>
+                                        <button class="qty-btn" onclick="updateQty('${p.id}', 1, event)">+</button>
                                        </div>`
-                                    : `<button class="add-btn" onclick="updateQty('${p.id}', 1)">+ Add</button>`
+                                    : `<button class="add-btn" onclick="triggerPolybagAnim('${p.img}'); updateQty('${p.id}', 1, event)">+ Add</button>`
                             }
                         </div>
                     </div>
@@ -356,17 +355,42 @@
             }).join('');
         }
 
-        // BUDGET QUANTITY CONTROLLER LOGIC
-        function updateQty(productId, change) {
+        /* 3D Interactive Mouse Motion */
+        function handle3DTilt(e, card) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -15;
+            const rotateY = ((x - centerX) / centerX) * 15;
+
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        }
+
+        function reset3DTilt(card) {
+            card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+        }
+
+        /* Polybag 3D Drop Animation Logic */
+        function triggerPolybagAnim(imgSrc) {
+            const overlay = document.getElementById('polybagOverlay');
+            const img = document.getElementById('animVegImg');
+            img.src = imgSrc;
+            overlay.classList.add('active');
+            setTimeout(() => { overlay.classList.remove('active'); }, 700);
+        }
+
+        /* Cart Operations */
+        function updateQty(productId, change, event) {
+            if(event) event.stopPropagation();
             const product = products.find(p => p.id === productId);
             if (!product || product.stock <= 0) return;
 
             let cartItem = cart.find(item => item.id === productId);
             if (cartItem) {
                 cartItem.qty += change;
-                if (cartItem.qty <= 0) {
-                    cart = cart.filter(item => item.id !== productId);
-                }
+                if (cartItem.qty <= 0) cart = cart.filter(item => item.id !== productId);
             } else if (change > 0) {
                 cart.push({ ...product, qty: 1 });
             }
@@ -375,7 +399,6 @@
             updateCartUI();
         }
 
-        // UPDATE CART POPUP & BADGE UI
         function updateCartUI() {
             const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
@@ -385,7 +408,7 @@
 
             const listEl = document.getElementById('cartList');
             if(cart.length === 0) {
-                listEl.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:30px 0; font-weight:500;">Your cart is currently empty 🛒</div>`;
+                listEl.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:30px 0;">Cart is empty 🛒</div>`;
                 return;
             }
 
@@ -393,67 +416,39 @@
                 <div class="cart-item">
                     <img src="${item.img}" class="cart-item-img">
                     <div style="flex-grow:1;">
-                        <div style="font-weight:700; font-size:0.9rem; color:var(--text-dark);">${item.name}</div>
+                        <div style="font-weight:700; font-size:0.9rem;">${item.name}</div>
                         <div style="font-size:0.8rem; color:var(--accent-green); font-weight:700;">₹${item.price} x ${item.qty}</div>
                     </div>
                     <div class="qty-controls">
-                        <button class="qty-btn" onclick="updateQty('${item.id}', -1)">-</button>
+                        <button class="qty-btn" onclick="updateQty('${item.id}', -1, event)">-</button>
                         <span class="qty-count">${item.qty}</span>
-                        <button class="qty-btn" onclick="updateQty('${item.id}', 1)">+</button>
+                        <button class="qty-btn" onclick="updateQty('${item.id}', 1, event)">+</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        // TOGGLE POPUP MODAL
         function toggleCartPopup() {
-            const overlay = document.getElementById('modalOverlay');
-            overlay.classList.toggle('active');
+            document.getElementById('modalOverlay').classList.toggle('active');
         }
 
         function closeOnOverlay(e) {
-            if (e.target.id === 'modalOverlay') {
-                toggleCartPopup();
-            }
+            if (e.target.id === 'modalOverlay') toggleCartPopup();
         }
 
-        // WHATSAPP CHECKOUT & GOOGLE SHEET SYNC
         function checkoutWhatsApp() {
             if (cart.length === 0) return alert("Cart khaali hai!");
             const name = document.getElementById('custName').value.trim();
             const address = document.getElementById('custAddr').value.trim();
-
             if (!name || !address) return alert("Kripya Naam aur Pata darj karein!");
 
-            // Google Sheets Stock Deduction Payload
-            const updateItems = cart.map(item => {
-                let gramWeight = 1000;
-                if (item.unit.includes('500g')) gramWeight = 500;
-                if (item.unit.includes('250g')) gramWeight = 250;
-                return { id: item.id, qtyInGrams: gramWeight * item.qty };
-            });
-
-            if (APPS_SCRIPT_URL && APPS_SCRIPT_URL.startsWith("http")) {
-                fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ items: updateItems })
-                });
-            }
-
-            let msg = `🛒 *NEW ORDER - MB FRESH*\n\n`;
-            msg += `👤 *Customer:* ${name}\n`;
-            msg += `📍 *Address:* ${address}\n\n`;
-            msg += `📦 *ITEMS (Eco Polybag):*\n`;
-
+            let msg = `🛒 *NEW ORDER - MB FRESH (3D Store)*\n\n👤 *Customer:* ${name}\n📍 *Address:* ${address}\n\n📦 *ITEMS:*\n`;
             let grandTotal = 0;
-            cart.forEach((item, index) => {
+            cart.forEach((item, i) => {
                 const total = item.price * item.qty;
                 grandTotal += total;
-                msg += `${index + 1}. ${item.name} (${item.unit}) x ${item.qty} = ₹${total}\n`;
+                msg += `${i + 1}. ${item.name} (${item.unit}) x ${item.qty} = ₹${total}\n`;
             });
-
             msg += `\n💰 *TOTAL AMOUNT:* ₹${grandTotal}`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
