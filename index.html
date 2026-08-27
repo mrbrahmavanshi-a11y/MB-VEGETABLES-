@@ -90,20 +90,20 @@
         }
 
         .product-img-wrapper {
-            height: 180px; display: flex; align-items: center; justify-content: center;
+            height: 160px; display: flex; align-items: center; justify-content: center;
             margin-bottom: 16px; background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 75%);
             border-radius: 18px; position: relative; transform-style: preserve-3d;
         }
 
-        .product-img {
-            max-width: 90%; max-height: 140px; object-fit: contain;
+        .product-icon {
+            font-size: 5rem;
             transform: translateZ(50px); 
-            filter: drop-shadow(0px 18px 12px rgba(0, 0, 0, 0.75));
+            filter: drop-shadow(0px 15px 10px rgba(0, 0, 0, 0.75));
             transition: transform 0.3s ease;
         }
 
-        .product-card:hover .product-img {
-            transform: translateZ(85px) scale(1.1) rotate(-3deg);
+        .product-card:hover .product-icon {
+            transform: translateZ(85px) scale(1.15) rotate(-5deg);
         }
 
         .product-title { font-size: 1.25rem; font-weight: 800; color: #fff; transform: translateZ(30px); margin-bottom: 4px; }
@@ -153,7 +153,7 @@
             0% { transform: translateY(0px) rotateY(-5deg); }
             100% { transform: translateY(-12px) rotateY(5deg); }
         }
-        .preview-img { width: 180px; height: 180px; object-fit: contain; filter: drop-shadow(0 25px 20px rgba(0,0,0,0.8)); margin: 0 auto 20px; display: block; }
+        .preview-icon { font-size: 6rem; filter: drop-shadow(0 25px 20px rgba(0,0,0,0.8)); margin: 0 auto 10px; display: block; }
         .preview-title { font-size: 1.8rem; font-weight: 900; color: #fff; margin-bottom: 6px; }
         .preview-price { font-size: 1.6rem; color: var(--gold-accent); font-weight: 900; margin-bottom: 20px; }
 
@@ -184,12 +184,12 @@
         .bag-seal-flap.sealed { transform: rotateX(180deg); }
         .bag-logo-mark { position: absolute; bottom: 25px; color: rgba(255,255,255,0.25); font-size: 0.8rem; font-weight: 900; letter-spacing: 2px; }
 
-        .anim-item-img {
-            width: 90px; height: 90px; object-fit: contain; position: absolute; top: -120px;
+        .anim-item-icon {
+            font-size: 4.5rem; position: absolute; top: -120px;
             filter: drop-shadow(0 15px 10px rgba(0,0,0,0.7)); opacity: 0;
             transition: all 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045); z-index: 4;
         }
-        .anim-item-img.drop-in { top: 70px; opacity: 1; transform: scale(0.8) rotate(12deg); }
+        .anim-item-icon.drop-in { top: 70px; opacity: 1; transform: scale(0.85) rotate(12deg); }
 
         .packaging-box.fly-to-cart {
             transform: translate(var(--target-x), var(--target-y)) scale(0.12) rotate(360deg) !important;
@@ -212,7 +212,7 @@
         .popup-close-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 1.4rem; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; }
         .cart-list { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
         .cart-item { display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 16px; border: 1px solid var(--border-wood); }
-        .cart-item-img { width: 45px; height: 45px; object-fit: contain; }
+        .cart-item-icon { font-size: 2rem; }
         .checkout-fields { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
         .checkout-fields input, .checkout-fields textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border-wood); border-radius: 12px; padding: 12px; color: #fff; outline: none; }
         .checkout-whatsapp-btn {
@@ -242,10 +242,11 @@
         <div class="product-grid" id="productGrid"></div>
     </main>
 
+    <!-- 3D SPOTLIGHT PREVIEW MODAL -->
     <div class="preview-overlay" id="previewOverlay" onclick="closePreviewOnOverlay(event)">
         <div class="preview-card-3d" id="previewCard">
             <button class="popup-close-btn" onclick="closePreview()" style="position:absolute; top:15px; right:15px;">&times;</button>
-            <img id="prevImg" class="preview-img" src="" alt="">
+            <div id="prevIcon" class="preview-icon"></div>
             <div id="prevTitle" class="preview-title"></div>
             <div id="prevUnit" style="color:#a89481; margin-bottom:10px;"></div>
             <div id="prevPrice" class="preview-price"></div>
@@ -253,17 +254,19 @@
         </div>
     </div>
 
+    <!-- CINEMATIC STAGE OVERLAY -->
     <div class="cinematic-stage" id="cinematicStage">
         <canvas id="particleCanvas"></canvas>
         <div class="packaging-box" id="packagingBox">
             <div class="polybag-body">
                 <div class="bag-seal-flap" id="bagFlap"></div>
-                <img id="animVegImg" class="anim-item-img" src="" alt="Vegetable">
+                <div id="animVegIcon" class="anim-item-icon"></div>
                 <div class="bag-logo-mark">MB ORGANIC</div>
             </div>
         </div>
     </div>
 
+    <!-- CART POPUP MODAL -->
     <div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
         <div class="cart-popup">
             <div class="popup-header">
@@ -288,56 +291,13 @@
     <script>
         const WHATSAPP_NUMBER = "919896873022";
 
-        // EMBEDDED HIGH-QUALITY CLEAN SVG DATA-URIs (100% Guaranteed Offline/Online Display)
         const products = [
-            { 
-                id: '1', 
-                name: 'Fresh Red Tomatoes (टमाटर)', 
-                unit: '1 kg', 
-                price: 40, 
-                stock: 20000, 
-                img: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="55" r="38" fill="%23e53935"/><path d="M50 12 C45 22 35 25 25 20 C35 30 45 28 50 32 C55 28 65 30 75 20 C65 25 55 22 50 12Z" fill="%2343a047"/><path d="M48 5 L52 5 L52 18 L48 18 Z" fill="%232e7d32"/></svg>` 
-            },
-            { 
-                id: '2', 
-                name: 'Fresh Farm Potatoes (आलू)', 
-                unit: '1 kg', 
-                price: 30, 
-                stock: 30000, 
-                img: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><ellipse cx="50" cy="52" rx="42" ry="32" fill="%238d6e63"/><circle cx="35" cy="45" r="2.5" fill="%235d4037"/><circle cx="65" cy="60" r="3" fill="%235d4037"/><circle cx="50" cy="65" r="2" fill="%235d4037"/></svg>` 
-            },
-            { 
-                id: '3', 
-                name: 'Spicy Green Chillies (हरी मिर्च)', 
-                unit: '250 g', 
-                price: 20, 
-                stock: 15000, 
-                img: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M20 25 Q 40 10 75 75 Q 60 85 45 60 Q 25 35 20 25 Z" fill="%2343a047"/><path d="M15 15 C 20 20 22 22 25 25 C 20 28 18 22 15 15 Z" fill="%231b5e20"/></svg>` 
-            },
-            { 
-                id: '4', 
-                name: 'Fresh Red Onions (प्याज)', 
-                unit: '1 kg', 
-                price: 35, 
-                stock: 25000, 
-                img: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="55" r="35" fill="%23ab47bc"/><path d="M50 20 Q 42 35 50 90 Q 58 35 50 20 Z" fill="%238e24aa"/><path d="M50 10 L50 20" stroke="%2343a047" stroke-width="4"/></svg>` 
-            },
-            { 
-                id: '5', 
-                name: 'Organic Cauliflower (फूलगोभी)', 
-                unit: '1 pc', 
-                price: 45, 
-                stock: 10000, 
-                img: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="45" r="28" fill="%23f5f5f5"/><path d="M15 65 Q 35 40 50 75 Q 65 40 85 65 Q 50 95 15 65 Z" fill="%234caf50"/></svg>` 
-            },
-            { 
-                id: '6', 
-                name: 'Crunchy Carrots (गाजर)', 
-                unit: '500 g', 
-                price: 30, 
-                stock: 18000, 
-                img: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="35,25 65,25 50,90" fill="%23fb8c00"/><path d="M50 5 L40 25 M50 5 L50 25 M50 5 L60 25" stroke="%232e7d32" stroke-width="4"/></svg>` 
-            }
+            { id: '1', name: 'Fresh Red Tomatoes (टमाटर)', unit: '1 kg', price: 40, stock: 20000, icon: '🍅' },
+            { id: '2', name: 'Fresh Farm Potatoes (आलू)', unit: '1 kg', price: 30, stock: 30000, icon: '🥔' },
+            { id: '3', name: 'Spicy Green Chillies (हरी मिर्च)', unit: '250 g', price: 20, stock: 15000, icon: '🌶️' },
+            { id: '4', name: 'Fresh Red Onions (प्याज)', unit: '1 kg', price: 35, stock: 25000, icon: '🧅' },
+            { id: '5', name: 'Organic Cauliflower (फूलगोभी)', unit: '1 pc', price: 45, stock: 10000, icon: '🥦' },
+            { id: '6', name: 'Crunchy Carrots (गाजर)', unit: '500 g', price: 30, stock: 18000, icon: '🥕' }
         ];
 
         let cart = [];
@@ -358,7 +318,7 @@
                          onmouseleave="reset3DTilt(this)">
                         <div class="product-img-wrapper">
                             <span class="out-stock-label">Out of Stock</span>
-                            <img src="${p.img}" alt="${p.name}" class="product-img">
+                            <div class="product-icon">${p.icon}</div>
                         </div>
                         <div>
                             <div class="product-title">${p.name}</div>
@@ -387,7 +347,7 @@
             const product = products.find(p => p.id === productId);
             if (!product) return;
 
-            document.getElementById('prevImg').src = product.img;
+            document.getElementById('prevIcon').innerText = product.icon;
             document.getElementById('prevTitle').innerText = product.name;
             document.getElementById('prevUnit').innerText = product.unit;
             document.getElementById('prevPrice').innerText = `₹${product.price}`;
@@ -422,11 +382,11 @@
             const stage = document.getElementById('cinematicStage');
             const box = document.getElementById('packagingBox');
             const flap = document.getElementById('bagFlap');
-            const img = document.getElementById('animVegImg');
+            const icon = document.getElementById('animVegIcon');
             const cartBtn = document.getElementById('cartBtn');
 
-            img.src = product.img;
-            img.classList.remove('drop-in');
+            icon.innerText = product.icon;
+            icon.classList.remove('drop-in');
             flap.classList.remove('sealed');
             box.className = 'packaging-box';
             box.style.transform = 'scale(0.8) translateY(50px)';
@@ -435,7 +395,7 @@
             // 1. Drop into Bag
             setTimeout(() => {
                 box.style.transform = 'scale(1) translateY(0)';
-                img.classList.add('drop-in');
+                icon.classList.add('drop-in');
             }, 100);
 
             // 2. Seal Ziplock & Particles
@@ -543,7 +503,7 @@
 
             listEl.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <img src="${item.img}" class="cart-item-img">
+                    <div class="cart-item-icon">${item.icon}</div>
                     <div style="flex-grow:1;">
                         <div style="font-weight:700; font-size:0.95rem;">${item.name}</div>
                         <div style="font-size:0.85rem; color:var(--gold-accent); font-weight:700;">₹${item.price} x ${item.qty}</div>
