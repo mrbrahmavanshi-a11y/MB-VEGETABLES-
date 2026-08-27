@@ -12,6 +12,7 @@
             --terracotta: #c25e00;
             --leaf-green: #2e7d32;
             --gold-accent: #dfa837;
+            --cream-bg: #f7f3e9;
             --border-wood: #3d2b1f;
             --shadow-realistic: 0 20px 40px rgba(0, 0, 0, 0.6);
             --card-perspective: 1200px;
@@ -48,17 +49,9 @@
             background: linear-gradient(135deg, var(--terracotta), #8d4000);
             color: #fff; font-weight: 800; padding: 12px 24px; border-radius: 50px;
             cursor: pointer; border: 1px solid var(--gold-accent); display: flex; align-items: center; gap: 12px;
-            box-shadow: 0 6px 15px rgba(194, 94, 0, 0.4); transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
+            box-shadow: 0 6px 15px rgba(194, 94, 0, 0.4); transition: transform 0.2s;
         }
-        .cart-trigger-btn.bounce {
-            animation: cartPulse 0.4s ease-in-out;
-        }
-        @keyframes cartPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.25); box-shadow: 0 0 25px var(--gold-accent); }
-            100% { transform: scale(1); }
-        }
+        .cart-trigger-btn:hover { transform: scale(1.05); }
 
         .cart-badge {
             background: var(--gold-accent); color: var(--wood-dark);
@@ -79,6 +72,7 @@
             perspective: var(--card-perspective);
         }
 
+        /* REALISTIC 3D CARD */
         .product-card {
             background: linear-gradient(145deg, rgba(42, 27, 16, 0.95), rgba(20, 13, 7, 0.98));
             border: 1px solid var(--border-wood); border-radius: 24px; padding: 22px;
@@ -91,24 +85,32 @@
             box-shadow: 0 30px 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(223, 168, 55, 0.25);
         }
 
+        /* REALISTIC STICKER/PHOTO CONTAINER */
         .product-img-wrapper {
             height: 180px; display: flex; align-items: center; justify-content: center;
             margin-bottom: 16px; background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 75%);
             border-radius: 18px; position: relative; transform-style: preserve-3d;
         }
 
+        /* REAL STICKER EFFECT WITH SHADOW FILTER */
         .product-img {
             max-width: 95%; max-height: 150px; object-fit: contain;
             transform: translateZ(60px); 
-            filter: drop-shadow(0px 18px 12px rgba(0, 0, 0, 0.75));
-            transition: transform 0.3s ease;
+            /* Real shadow behind translucent photo cutouts */
+            filter: drop-shadow(0px 18px 12px rgba(0, 0, 0, 0.75)) drop-shadow(0px 4px 4px rgba(0,0,0,0.5));
+            transition: transform 0.3s ease, filter 0.3s ease;
         }
 
         .product-card:hover .product-img {
             transform: translateZ(95px) scale(1.12) rotate(-2deg);
+            filter: drop-shadow(0px 25px 18px rgba(0, 0, 0, 0.85));
         }
 
-        .product-title { font-size: 1.25rem; font-weight: 800; color: #fff; transform: translateZ(30px); margin-bottom: 4px; }
+        .product-title {
+            font-size: 1.25rem; font-weight: 800; color: #fff;
+            transform: translateZ(30px); margin-bottom: 4px;
+        }
+
         .product-unit { font-size: 0.85rem; color: #a89481; font-weight: 600; margin-bottom: 16px; transform: translateZ(20px); }
 
         .product-footer {
@@ -118,11 +120,13 @@
         }
         
         .product-price { font-size: 1.4rem; font-weight: 900; color: var(--gold-accent); }
+
         .product-card.out-of-stock { opacity: 0.5; filter: grayscale(90%); }
         .out-stock-label {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) translateZ(100px);
             background: #b91c1c; color: #fff; font-weight: 900; font-size: 0.85rem;
             padding: 8px 18px; border-radius: 30px; display: none; text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
         }
         .product-card.out-of-stock .out-stock-label { display: block; }
 
@@ -138,63 +142,28 @@
             border: 1px solid rgba(255,255,255,0.2); padding: 10px 22px; border-radius: 12px;
             font-weight: 800; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
         }
+        .add-btn:hover { transform: scale(1.05); }
 
-        /* HIGH-END CINEMATIC 3D PACKAGING OVERLAY */
-        .cinematic-stage {
-            position: fixed; inset: 0; pointer-events: none; z-index: 99999;
-            display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s;
+        /* REAListic PACKAGING ANIMATION */
+        .polybag-anim-overlay {
+            position: fixed; inset: 0; pointer-events: none; z-index: 9999; display: flex;
+            align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
         }
-        .cinematic-stage.active { opacity: 1; pointer-events: auto; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
+        .polybag-anim-overlay.active { opacity: 1; }
+        .polybag-container {
+            width: 170px; height: 190px; background: #8b5a2b; border: 3px solid #5c3a1b;
+            border-radius: 10px 10px 40px 40px; position: relative; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9); transform: scale(0.5) translateY(120px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .polybag-anim-overlay.active .polybag-container { transform: scale(1) translateY(0); }
+        .falling-veg { width: 75px; height: 75px; object-fit: contain; position: absolute; top: -70px; animation: dropIn 0.5s ease-in forwards; }
 
-        .packaging-box {
-            width: 200px; height: 260px; position: absolute;
-            transform-style: preserve-3d; transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        /* KRAFT REALISTIC 3D BAG DESIGN */
-        .polybag-body {
-            width: 100%; height: 100%; background: linear-gradient(180deg, #aa733c, #73481e);
-            border: 2px solid #573311; border-radius: 12px 12px 36px 36px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.9), inset 0 0 20px rgba(0,0,0,0.4);
-            position: relative; overflow: hidden; display: flex; justify-content: center;
-        }
-
-        /* BAG SEALING FLAP */
-        .bag-seal-flap {
-            position: absolute; top: 0; left: 0; right: 0; height: 35px;
-            background: linear-gradient(180deg, #6e441d, #42270e); border-bottom: 3px dashed var(--gold-accent);
-            transform-origin: top; transition: transform 0.4s ease-in-out; z-index: 5;
-        }
-        .bag-seal-flap.sealed {
-            transform: rotateX(180deg);
+        @keyframes dropIn {
+            0% { top: -70px; opacity: 0; transform: scale(1.3); }
+            100% { top: 35px; opacity: 1; transform: scale(0.85); }
         }
 
-        .bag-logo-mark {
-            position: absolute; bottom: 25px; color: rgba(255,255,255,0.25);
-            font-size: 0.8rem; font-weight: 900; letter-spacing: 2px;
-        }
-
-        /* ANIMATED VEGETABLE FALLING IN BAG */
-        .anim-item-img {
-            width: 100px; height: 100px; object-fit: contain; position: absolute; top: -120px;
-            filter: drop-shadow(0 15px 10px rgba(0,0,0,0.7)); opacity: 0;
-            transition: all 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045); z-index: 4;
-        }
-        .anim-item-img.drop-in {
-            top: 70px; opacity: 1; transform: scale(0.8) rotate(12deg);
-        }
-
-        /* FLY TO CART ANIMATION TARGETING */
-        .packaging-box.fly-to-cart {
-            transform: translate(var(--target-x), var(--target-y)) scale(0.12) rotate(360deg) !important;
-            opacity: 0;
-        }
-
-        canvas#particleCanvas {
-            position: absolute; inset: 0; pointer-events: none; z-index: 6;
-        }
-
-        /* POPUP MODAL */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
             z-index: 999; display: none; align-items: center; justify-content: center; padding: 16px;
@@ -208,7 +177,7 @@
         .popup-close-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 1.4rem; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; }
         .cart-list { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
         .cart-item { display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 16px; border: 1px solid var(--border-wood); }
-        .cart-item-img { width: 45px; height: 45px; object-fit: contain; }
+        .cart-item-img { width: 45px; height: 45px; object-fit: contain; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5)); }
         .checkout-fields { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
         .checkout-fields input, .checkout-fields textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border-wood); border-radius: 12px; padding: 12px; color: #fff; outline: none; }
         .checkout-whatsapp-btn {
@@ -219,40 +188,36 @@
 </head>
 <body>
 
-    <div class="top-banner">🏺 MRATYUNJAY BRAHMAVANSHI - CINEMATIC PACKAGING MARKET 🌾</div>
+    <div class="top-banner">🏺 MRATYUNJAY BRAHMAVANSHI - REALISTIC ORGANIC MARKET 🌾</div>
 
     <header>
         <a href="#" class="brand-logo">🍃 MB <span>Fresh Market</span></a>
-        <button class="cart-trigger-btn" id="cartBtn" onclick="toggleCartPopup()">
+        <button class="cart-trigger-btn" onclick="toggleCartPopup()">
             🛍️ Kraft Polybag
             <div class="cart-badge" id="cartCount">0</div>
         </button>
     </header>
 
     <section class="hero">
-        <h1>Cinematic 3D Packaging Experience</h1>
-        <p>Dynamic Polybag drop, automated ziplock sealing smoke & smooth cart trajectory.</p>
+        <h1>Authentic Fresh Harvest</h1>
+        <p>Dynamic 3D depth real-feel PNG stickers & real-time inventory synchronization.</p>
     </section>
 
     <main class="container">
         <div class="product-grid" id="productGrid"></div>
     </main>
 
-    <div class="cinematic-stage" id="cinematicStage">
-        <canvas id="particleCanvas"></canvas>
-        <div class="packaging-box" id="packagingBox">
-            <div class="polybag-body">
-                <div class="bag-seal-flap" id="bagFlap"></div>
-                <img id="animVegImg" class="anim-item-img" src="" alt="Vegetable">
-                <div class="bag-logo-mark">MB ORGANIC</div>
-            </div>
+    <div class="polybag-anim-overlay" id="polybagOverlay">
+        <div class="polybag-container">
+            <img id="animVegImg" class="falling-veg" src="" alt="Veg">
+            <span style="position: absolute; bottom: 12px; font-size: 0.75rem; font-weight:900; color:var(--gold-accent);">PACKING REAL ITEM...</span>
         </div>
     </div>
 
     <div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
         <div class="cart-popup">
             <div class="popup-header">
-                <h3 style="color:var(--gold-accent);">🛍️ Sealed Polybag Cart</h3>
+                <h3 style="color:var(--gold-accent);">🛍️ Real Kraft Polybag</h3>
                 <button class="popup-close-btn" onclick="toggleCartPopup()">&times;</button>
             </div>
             <div class="cart-list" id="cartList"></div>
@@ -274,9 +239,10 @@
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZzv98fFFJduX0Lz6xSxkrhk23v7MrT473M2H5VdnoImUZ3nwbTA8ZCuGa54EVsFQ/exec"; 
         const WHATSAPP_NUMBER = "919896873022";
 
+        // REAL TRANSPARENT HIGH-DEFINITION STICKER PHOTO URLS
         let products = [
             { id: '1', name: 'Fresh Red Tomatoes (टमाटर)', unit: '1 kg', price: 40, stock: 20000, img: 'https://pngimg.com/uploads/tomato/tomato_PNG12592.png' },
-            { id: '2', name: 'Fresh Farm Potatoes (आलू)', unit: '1 kg', price: 30, stock: 30000, img: 'https://pngimg.com/uploads/potato/potato_PNG7081.png' },
+            { id: '2', name: 'Fresh Farm Potatoes (آलू)', unit: '1 kg', price: 30, stock: 30000, img: 'https://pngimg.com/uploads/potato/potato_PNG7081.png' },
             { id: '3', name: 'Spicy Green Chillies (हरी मिर्च)', unit: '250 g', price: 20, stock: 15000, img: 'https://pngimg.com/uploads/chilli/chilli_PNG3.png' },
             { id: '4', name: 'Fresh Red Onions (प्याज)', unit: '1 kg', price: 35, stock: 25000, img: 'https://pngimg.com/uploads/onion/onion_PNG3821.png' },
             { id: '5', name: 'Organic Cauliflower (फूलगोभी)', unit: '1 pc', price: 45, stock: 10000, img: 'https://pngimg.com/uploads/cauliflower/cauliflower_PNG12684.png' },
@@ -293,8 +259,12 @@
                 fetch(APPS_SCRIPT_URL)
                     .then(res => res.json())
                     .then(data => {
-                        if (data && data.length > 0) { products = data; renderProducts(); }
-                    }).catch(() => {});
+                        if (data && data.length > 0) {
+                            products = data;
+                            renderProducts();
+                        }
+                    })
+                    .catch(() => {});
             }
         }
 
@@ -325,7 +295,7 @@
                                         <span class="qty-count">${qty}</span>
                                         <button class="qty-btn" onclick="updateQty('${p.id}', 1, event)">+</button>
                                        </div>`
-                                    : `<button class="add-btn" onclick="startCinematicPacking('${p.id}', '${p.img}', event)">+ Add</button>`
+                                    : `<button class="add-btn" onclick="triggerPolybagAnim('${p.img}'); updateQty('${p.id}', 1, event)">+ Add</button>`
                             }
                         </div>
                     </div>
@@ -333,65 +303,116 @@
             }).join('');
         }
 
-        /* 3D TILT EFFECT */
         function handle3DTilt(e, card) {
             const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left, y = e.clientY - rect.top;
-            const centerX = rect.width / 2, centerY = rect.height / 2;
-            card.style.transform = `rotateX(${((y - centerY) / centerY) * -16}deg) rotateY(${((x - centerX) / centerX) * 16}deg)`;
-        }
-        function reset3DTilt(card) { card.style.transform = `rotateX(0deg) rotateY(0deg)`; }
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -16;
+            const rotateY = ((x - centerX) / centerX) * 16;
 
-        /* ADVANCED CINEMATIC 3D PACKAGING ANIMATION CONTROLLER */
-        function startCinematicPacking(productId, imgSrc, event) {
-            if(event) event.stopPropagation();
-            
-            const stage = document.getElementById('cinematicStage');
-            const box = document.getElementById('packagingBox');
-            const flap = document.getElementById('bagFlap');
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        }
+
+        function reset3DTilt(card) {
+            card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+        }
+
+        function triggerPolybagAnim(imgSrc) {
+            const overlay = document.getElementById('polybagOverlay');
             const img = document.getElementById('animVegImg');
-            const cartBtn = document.getElementById('cartBtn');
-
-            // Reset Initial Animation States
             img.src = imgSrc;
-            img.classList.remove('drop-in');
-            flap.classList.remove('sealed');
-            box.className = 'packaging-box';
-            box.style.transform = 'scale(0.8) translateY(50px)';
-            stage.classList.add('active');
-
-            // Step 1: Veggie Drops inside Polybag
-            setTimeout(() => {
-                box.style.transform = 'scale(1) translateY(0)';
-                img.classList.add('drop-in');
-            }, 100);
-
-            // Step 2: Polybag Seals + Particles Sparkle
-            setTimeout(() => {
-                flap.classList.add('sealed');
-                triggerSealingParticles();
-            }, 650);
-
-            // Step 3: Sealed Polybag Flies into Cart Button
-            setTimeout(() => {
-                const cartRect = cartBtn.getBoundingClientRect();
-                const boxRect = box.getBoundingClientRect();
-                
-                const targetX = (cartRect.left + cartRect.width/2) - (boxRect.left + boxRect.width/2);
-                const targetY = (cartRect.top + cartRect.height/2) - (boxRect.top + boxRect.height/2);
-
-                box.style.setProperty('--target-x', `${targetX}px`);
-                box.style.setProperty('--target-y', `${targetY}px`);
-                box.classList.add('fly-to-cart');
-            }, 1100);
-
-            // Step 4: Finish & Update Cart UI
-            setTimeout(() => {
-                stage.classList.remove('active');
-                updateQty(productId, 1, null);
-                cartBtn.classList.add('bounce');
-                setTimeout(() => cartBtn.classList.remove('bounce'), 400);
-            }, 1750);
+            overlay.classList.add('active');
+            setTimeout(() => { overlay.classList.remove('active'); }, 700);
         }
 
-        /* CANVAS PARTICLE SYSTEM FOR SEALING SMOKE
+        function updateQty(productId, change, event) {
+            if(event) event.stopPropagation();
+            const product = products.find(p => p.id === productId);
+            if (!product || product.stock <= 0) return;
+
+            let cartItem = cart.find(item => item.id === productId);
+            if (cartItem) {
+                cartItem.qty += change;
+                if (cartItem.qty <= 0) cart = cart.filter(item => item.id !== productId);
+            } else if (change > 0) {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            renderProducts();
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            document.getElementById('cartCount').innerText = totalQty;
+            document.getElementById('cartTotal').innerText = `₹${totalPrice}`;
+
+            const listEl = document.getElementById('cartList');
+            if(cart.length === 0) {
+                listEl.innerHTML = `<div style="text-align:center; color:#a89481; padding:30px 0;">Your kraft polybag is empty 🛒</div>`;
+                return;
+            }
+
+            listEl.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.img}" class="cart-item-img">
+                    <div style="flex-grow:1;">
+                        <div style="font-weight:700; font-size:0.95rem;">${item.name}</div>
+                        <div style="font-size:0.85rem; color:var(--gold-accent); font-weight:700;">₹${item.price} x ${item.qty}</div>
+                    </div>
+                    <div class="qty-controls">
+                        <button class="qty-btn" onclick="updateQty('${item.id}', -1, event)">-</button>
+                        <span class="qty-count">${item.qty}</span>
+                        <button class="qty-btn" onclick="updateQty('${item.id}', 1, event)">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleCartPopup() {
+            document.getElementById('modalOverlay').classList.toggle('active');
+        }
+
+        function closeOnOverlay(e) {
+            if (e.target.id === 'modalOverlay') toggleCartPopup();
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) return alert("Cart is empty!");
+            const name = document.getElementById('custName').value.trim();
+            const address = document.getElementById('custAddr').value.trim();
+            if (!name || !address) return alert("Please fill Name & Address!");
+
+            const updateItems = cart.map(item => {
+                let gramWeight = 1000;
+                if (item.unit.includes('500g')) gramWeight = 500;
+                if (item.unit.includes('250g')) gramWeight = 250;
+                return { id: item.id, qtyInGrams: gramWeight * item.qty };
+            });
+
+            if (APPS_SCRIPT_URL && APPS_SCRIPT_URL.startsWith("http")) {
+                fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: updateItems })
+                });
+            }
+
+            let msg = `🛒 *NEW ORDER - MB REALISTIC MARKET*\n\n👤 *Customer:* ${name}\n📍 *Address:* ${address}\n\n📦 *ITEMS:*\n`;
+            let grandTotal = 0;
+            cart.forEach((item, i) => {
+                const total = item.price * item.qty;
+                grandTotal += total;
+                msg += `${i + 1}. ${item.name} (${item.unit}) x ${item.qty} = ₹${total}\n`;
+            });
+            msg += `\n💰 *TOTAL AMOUNT:* ₹${grandTotal}`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+    </script>
+</body>
+</html>
